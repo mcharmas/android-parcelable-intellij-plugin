@@ -68,7 +68,7 @@ public class CodeGenerator {
         return typeSerializer == null ? new UnknownTypeSerializer() : typeSerializer;
     }
 
-    protected String generateDescribeContents() {
+    private String generateDescribeContents() {
         return "@Override public int describeContents() { return 0; }";
     }
 
