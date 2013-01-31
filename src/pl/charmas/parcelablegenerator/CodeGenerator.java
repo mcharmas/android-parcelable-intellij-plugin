@@ -97,7 +97,7 @@ public class CodeGenerator {
             }
         }
 
-        String implementsType = "android.os.Parcelable<" + psiClass.getQualifiedName() + ">";
+        String implementsType = "android.os.Parcelable";
         PsiJavaCodeReferenceElement implementsReference = elementFactory.createReferenceFromText(implementsType, psiClass);
         PsiReferenceList implementsList = psiClass.getImplementsList();
         if (implementsList != null) {
