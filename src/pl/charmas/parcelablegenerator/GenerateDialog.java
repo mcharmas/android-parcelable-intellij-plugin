@@ -7,6 +7,7 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.ToolbarDecorator;
+import com.intellij.ui.components.JBList;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -19,10 +20,10 @@ public class GenerateDialog extends DialogWrapper {
 
     protected GenerateDialog(PsiClass psiClass) {
         super(psiClass.getProject());
-        setTitle("Select fields for parcelable generation.");
+        setTitle("Select Fields For Parcelable Generation");
 
         myFields = new CollectionListModel<PsiField>(psiClass.getAllFields());
-        JList fieldList = new JList(myFields);
+        JBList fieldList = new JBList(myFields);
         fieldList.setCellRenderer(new DefaultPsiElementCellRenderer());
         ToolbarDecorator decorator = ToolbarDecorator.createDecorator(fieldList);
         decorator.disableAddAction();

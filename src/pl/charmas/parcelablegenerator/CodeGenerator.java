@@ -2,6 +2,10 @@ package pl.charmas.parcelablegenerator;
 
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
+import pl.charmas.parcelablegenerator.typeserializers.BooleanPrimitiveSerializer;
+import pl.charmas.parcelablegenerator.typeserializers.PrimitiveTypeSerializer;
+import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
+import pl.charmas.parcelablegenerator.typeserializers.UnknownTypeSerializer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,18 +15,19 @@ public class CodeGenerator {
 
     private final PsiClass psiClass;
     private final List<PsiField> fields;
-    private final Map<String, MethodForType> writeMethodsForTypes = new HashMap<String, MethodForType>();
+    private final Map<String, TypeSerializer> writeMethodsForTypes = new HashMap<String, TypeSerializer>();
 
     public CodeGenerator(PsiClass psiClass, List<PsiField> fields) {
         this.psiClass = psiClass;
         this.fields = fields;
 
-        writeMethodsForTypes.put("byte", new MethodForType("writeByte", "readByte"));
-        writeMethodsForTypes.put("double", new MethodForType("writeDouble", "readDouble"));
-        writeMethodsForTypes.put("float", new MethodForType("writeFloat", "readFloat"));
-        writeMethodsForTypes.put("int", new MethodForType("writeInt", "readInt"));
-        writeMethodsForTypes.put("long", new MethodForType("writeLong", "readLong"));
-        writeMethodsForTypes.put("java.lang.String", new MethodForType("writeString", "readString"));
+        writeMethodsForTypes.put("byte", new PrimitiveTypeSerializer("Byte"));
+        writeMethodsForTypes.put("double", new PrimitiveTypeSerializer("Double"));
+        writeMethodsForTypes.put("float", new PrimitiveTypeSerializer("Float"));
+        writeMethodsForTypes.put("int", new PrimitiveTypeSerializer("Int"));
+        writeMethodsForTypes.put("long", new PrimitiveTypeSerializer("Long"));
+        writeMethodsForTypes.put("java.lang.String", new PrimitiveTypeSerializer("String"));
+        writeMethodsForTypes.put("boolean", new BooleanPrimitiveSerializer());
     }
 
     private String generateStaticCreator(PsiClass psiClass) {
@@ -40,7 +45,7 @@ public class CodeGenerator {
     private String generateConstructor(List<PsiField> fields, PsiClass psiClass) {
         StringBuilder sb = new StringBuilder("private ").append(psiClass.getName()).append("(android.os.Parcel in) {");
         for (PsiField field : fields) {
-            sb.append("this.").append(field.getName()).append(" = ").append(getMethodBasedOnType(field.getType()).getReadMethod()).append("();\n");
+            sb.append(getMethodBasedOnType(field.getType()).readValue(field, "in"));
         }
         sb.append("}");
         return sb.toString();
@@ -50,16 +55,17 @@ public class CodeGenerator {
     private String generateWriteToParcel(List<PsiField> fields) {
         StringBuilder sb = new StringBuilder("@Override public void writeToParcel(android.os.Parcel dest, int flags) {");
         for (PsiField field : fields) {
-            sb.append("dest.").append(getMethodBasedOnType(field.getType()).getWriteMethod()).append("(").append(field.getName()).append(");\n");
+            sb.append(getMethodBasedOnType(field.getType()).writeValue(field, "dest", "flags"));
         }
         sb.append("}");
         return sb.toString();
     }
 
-    private MethodForType getMethodBasedOnType(PsiType type) {
+    private TypeSerializer getMethodBasedOnType(PsiType type) {
         String canonicalText = type.getCanonicalText();
         System.out.println(canonicalText);
-        return writeMethodsForTypes.get(canonicalText);
+        TypeSerializer typeSerializer = writeMethodsForTypes.get(canonicalText);
+        return typeSerializer == null ? new UnknownTypeSerializer() : typeSerializer;
     }
 
     protected String generateDescribeContents() {
@@ -79,23 +85,24 @@ public class CodeGenerator {
         styleManager.shortenClassReferences(psiClass.add(writeToParcelMethod));
         styleManager.shortenClassReferences(psiClass.add(constructor));
         styleManager.shortenClassReferences(psiClass.add(creatorField));
+        makeClassImplementParcelable(elementFactory);
     }
 
-    private static class MethodForType {
-        private String readMethod;
-        private String writeMethod;
-
-        private MethodForType(String writeMethod, String readMethod) {
-            this.readMethod = readMethod;
-            this.writeMethod = writeMethod;
+    private void makeClassImplementParcelable(PsiElementFactory elementFactory) {
+        PsiClassType[] implementsListTypes = psiClass.getImplementsListTypes();
+        for (PsiClassType implementsListType : implementsListTypes) {
+            PsiClass resolved = implementsListType.resolve();
+            if (resolved != null && "android.os.Parcelable".equals(resolved.getQualifiedName())) {
+                return;
+            }
         }
 
-        public String getReadMethod() {
-            return readMethod;
-        }
-
-        public String getWriteMethod() {
-            return writeMethod;
+        String implementsType = "android.os.Parcelable<" + psiClass.getQualifiedName() + ">";
+        PsiJavaCodeReferenceElement implementsReference = elementFactory.createReferenceFromText(implementsType, psiClass);
+        PsiReferenceList implementsList = psiClass.getImplementsList();
+        if (implementsList != null) {
+            implementsList.add(implementsReference);
         }
     }
+
 }
