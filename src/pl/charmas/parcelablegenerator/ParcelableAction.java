@@ -16,6 +16,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 import java.util.List;
 
 public class ParcelableAction extends AnAction {
+
+    @Override
     public void actionPerformed(AnActionEvent e) {
         PsiClass psiClass = getPsiClassFromContext(e);
         GenerateDialog dlg = new GenerateDialog(psiClass);

@@ -3,6 +3,7 @@ package pl.charmas.parcelablegenerator;
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import pl.charmas.parcelablegenerator.typeserializers.BooleanPrimitiveSerializer;
+import pl.charmas.parcelablegenerator.typeserializers.ListPrimitiveSerializer;
 import pl.charmas.parcelablegenerator.typeserializers.PrimitiveTypeSerializer;
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
 import pl.charmas.parcelablegenerator.typeserializers.UnknownTypeSerializer;
@@ -28,6 +29,7 @@ public class CodeGenerator {
         writeMethodsForTypes.put("long", new PrimitiveTypeSerializer("Long"));
         writeMethodsForTypes.put("java.lang.String", new PrimitiveTypeSerializer("String"));
         writeMethodsForTypes.put("boolean", new BooleanPrimitiveSerializer());
+        writeMethodsForTypes.put("Integer", new PrimitiveTypeSerializer("Int"));
     }
 
     private String generateStaticCreator(PsiClass psiClass) {
@@ -64,8 +66,20 @@ public class CodeGenerator {
     private TypeSerializer getMethodBasedOnType(PsiType type) {
         String canonicalText = type.getCanonicalText();
         System.out.println(canonicalText);
-        TypeSerializer typeSerializer = writeMethodsForTypes.get(canonicalText);
-        return typeSerializer == null ? new UnknownTypeSerializer() : typeSerializer;
+        if (canonicalText.startsWith("java.util.List")) {
+            String a = canonicalText.replaceAll("java.util.List<", "");
+            a = a.replaceAll(">", "");
+            return new ListPrimitiveSerializer(a);
+        } else {
+            TypeSerializer typeSerializer = writeMethodsForTypes.get(canonicalText);
+            if (typeSerializer != null) {
+                return typeSerializer;
+            } else {
+                return new UnknownTypeSerializer(canonicalText);
+            }
+
+        }
+
     }
 
     private String generateDescribeContents() {
@@ -79,12 +93,11 @@ public class CodeGenerator {
         PsiMethod constructor = elementFactory.createMethodFromText(generateConstructor(fields, psiClass), psiClass);
         PsiField creatorField = elementFactory.createFieldFromText(generateStaticCreator(psiClass), psiClass);
 
-
         JavaCodeStyleManager styleManager = JavaCodeStyleManager.getInstance(psiClass.getProject());
-        styleManager.shortenClassReferences(psiClass.add(describeContentsMethod));
-        styleManager.shortenClassReferences(psiClass.add(writeToParcelMethod));
-        styleManager.shortenClassReferences(psiClass.add(constructor));
-        styleManager.shortenClassReferences(psiClass.add(creatorField));
+        styleManager.shortenClassReferences(psiClass.addAfter(describeContentsMethod, psiClass.getLastChild()));
+        styleManager.shortenClassReferences(psiClass.addAfter(writeToParcelMethod, psiClass.getLastChild()));
+        styleManager.shortenClassReferences(psiClass.addAfter(constructor, psiClass.getLastChild()));
+        styleManager.shortenClassReferences(psiClass.addAfter(creatorField, psiClass.getLastChild()));
         makeClassImplementParcelable(elementFactory);
     }
 
