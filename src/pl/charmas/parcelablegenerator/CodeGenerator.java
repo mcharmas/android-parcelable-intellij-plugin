@@ -29,7 +29,7 @@ public class CodeGenerator {
         writeMethodsForTypes.put("long", new PrimitiveTypeSerializer("Long"));
         writeMethodsForTypes.put("java.lang.String", new PrimitiveTypeSerializer("String"));
         writeMethodsForTypes.put("boolean", new BooleanPrimitiveSerializer());
-        writeMethodsForTypes.put("Integer", new PrimitiveTypeSerializer("Int"));
+        writeMethodsForTypes.put("java.lang.Integer", new PrimitiveTypeSerializer("Int"));
     }
 
     private String generateStaticCreator(PsiClass psiClass) {
@@ -94,10 +94,10 @@ public class CodeGenerator {
         PsiField creatorField = elementFactory.createFieldFromText(generateStaticCreator(psiClass), psiClass);
 
         JavaCodeStyleManager styleManager = JavaCodeStyleManager.getInstance(psiClass.getProject());
-        styleManager.shortenClassReferences(psiClass.addAfter(describeContentsMethod, psiClass.getLastChild()));
-        styleManager.shortenClassReferences(psiClass.addAfter(writeToParcelMethod, psiClass.getLastChild()));
-        styleManager.shortenClassReferences(psiClass.addAfter(constructor, psiClass.getLastChild()));
-        styleManager.shortenClassReferences(psiClass.addAfter(creatorField, psiClass.getLastChild()));
+        styleManager.shortenClassReferences(psiClass.addBefore(describeContentsMethod, psiClass.getLastChild()));
+        styleManager.shortenClassReferences(psiClass.addBefore(writeToParcelMethod, psiClass.getLastChild()));
+        styleManager.shortenClassReferences(psiClass.addBefore(constructor, psiClass.getLastChild()));
+        styleManager.shortenClassReferences(psiClass.addBefore(creatorField, psiClass.getLastChild()));
         makeClassImplementParcelable(elementFactory);
     }
 
