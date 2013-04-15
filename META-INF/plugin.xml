@@ -13,7 +13,7 @@
     </change-notes>
 
     <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
-    <idea-version since-build="107.105"/>
+    <idea-version since-build="123.72"/>
 
     <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
          on how to target different products -->
@@ -31,8 +31,8 @@
 
     <actions>
         <!-- Add your actions here -->
-        <action id="generateParcelable" class="pl.charmas.parcelablegenerator.ParcelableAction"
-                text="Generate Parcelable"
+        <action id="generateParcelableNew" class="pl.charmas.parcelablegenerator.ParcelableAction"
+                text="Generate Parcelable New"
                 description="Generates parcelable based on fields">
             <add-to-group group-id="GenerateGroup" anchor="last"/>
         </action>
