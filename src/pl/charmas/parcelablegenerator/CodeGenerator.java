@@ -2,34 +2,23 @@ package pl.charmas.parcelablegenerator;
 
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-import pl.charmas.parcelablegenerator.typeserializers.BooleanPrimitiveSerializer;
-import pl.charmas.parcelablegenerator.typeserializers.ListPrimitiveSerializer;
-import pl.charmas.parcelablegenerator.typeserializers.PrimitiveTypeSerializer;
+import pl.charmas.parcelablegenerator.typeserializers.ChainSerializerFactory;
+import pl.charmas.parcelablegenerator.typeserializers.PrimitiveTypeSerializerFactory;
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
-import pl.charmas.parcelablegenerator.typeserializers.UnknownTypeSerializer;
+import pl.charmas.parcelablegenerator.typeserializers.TypeSerializerFactory;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CodeGenerator {
 
     private final PsiClass psiClass;
     private final List<PsiField> fields;
-    private final Map<String, TypeSerializer> writeMethodsForTypes = new HashMap<String, TypeSerializer>();
+    private final TypeSerializerFactory typeSerializerFactory;
 
     public CodeGenerator(PsiClass psiClass, List<PsiField> fields) {
         this.psiClass = psiClass;
         this.fields = fields;
-
-        writeMethodsForTypes.put("byte", new PrimitiveTypeSerializer("Byte"));
-        writeMethodsForTypes.put("double", new PrimitiveTypeSerializer("Double"));
-        writeMethodsForTypes.put("float", new PrimitiveTypeSerializer("Float"));
-        writeMethodsForTypes.put("int", new PrimitiveTypeSerializer("Int"));
-        writeMethodsForTypes.put("long", new PrimitiveTypeSerializer("Long"));
-        writeMethodsForTypes.put("java.lang.String", new PrimitiveTypeSerializer("String"));
-        writeMethodsForTypes.put("boolean", new BooleanPrimitiveSerializer());
-        writeMethodsForTypes.put("java.lang.Integer", new PrimitiveTypeSerializer("Int"));
+        this.typeSerializerFactory = new ChainSerializerFactory(new PrimitiveTypeSerializerFactory());
     }
 
     private String generateStaticCreator(PsiClass psiClass) {
@@ -47,7 +36,7 @@ public class CodeGenerator {
     private String generateConstructor(List<PsiField> fields, PsiClass psiClass) {
         StringBuilder sb = new StringBuilder("private ").append(psiClass.getName()).append("(android.os.Parcel in) {");
         for (PsiField field : fields) {
-            sb.append(getMethodBasedOnType(field.getType()).readValue(field, "in"));
+            sb.append(getSerializerForType(field).readValue(field, "in"));
         }
         sb.append("}");
         return sb.toString();
@@ -57,29 +46,14 @@ public class CodeGenerator {
     private String generateWriteToParcel(List<PsiField> fields) {
         StringBuilder sb = new StringBuilder("@Override public void writeToParcel(android.os.Parcel dest, int flags) {");
         for (PsiField field : fields) {
-            sb.append(getMethodBasedOnType(field.getType()).writeValue(field, "dest", "flags"));
+            sb.append(getSerializerForType(field).writeValue(field, "dest", "flags"));
         }
         sb.append("}");
         return sb.toString();
     }
 
-    private TypeSerializer getMethodBasedOnType(PsiType type) {
-        String canonicalText = type.getCanonicalText();
-        System.out.println(canonicalText);
-        if (canonicalText.startsWith("java.util.List")) {
-            String a = canonicalText.replaceAll("java.util.List<", "");
-            a = a.replaceAll(">", "");
-            return new ListPrimitiveSerializer(a);
-        } else {
-            TypeSerializer typeSerializer = writeMethodsForTypes.get(canonicalText);
-            if (typeSerializer != null) {
-                return typeSerializer;
-            } else {
-                return new UnknownTypeSerializer(canonicalText);
-            }
-
-        }
-
+    private TypeSerializer getSerializerForType(PsiField field) {
+        return typeSerializerFactory.getSerializer(field.getType());
     }
 
     private String generateDescribeContents() {
