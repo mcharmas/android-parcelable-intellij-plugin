@@ -2,10 +2,7 @@ package pl.charmas.parcelablegenerator;
 
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-import pl.charmas.parcelablegenerator.typeserializers.ChainSerializerFactory;
-import pl.charmas.parcelablegenerator.typeserializers.PrimitiveTypeSerializerFactory;
-import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
-import pl.charmas.parcelablegenerator.typeserializers.TypeSerializerFactory;
+import pl.charmas.parcelablegenerator.typeserializers.*;
 
 import java.util.List;
 
@@ -18,7 +15,10 @@ public class CodeGenerator {
     public CodeGenerator(PsiClass psiClass, List<PsiField> fields) {
         this.psiClass = psiClass;
         this.fields = fields;
-        this.typeSerializerFactory = new ChainSerializerFactory(new PrimitiveTypeSerializerFactory());
+        this.typeSerializerFactory = new ChainSerializerFactory(
+                new PrimitiveTypeSerializerFactory(),
+                new PrimitiveArraySerializerFactory()
+        );
     }
 
     private String generateStaticCreator(PsiClass psiClass) {
