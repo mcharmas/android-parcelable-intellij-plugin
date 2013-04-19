@@ -17,7 +17,8 @@ public class CodeGenerator {
         this.fields = fields;
         this.typeSerializerFactory = new ChainSerializerFactory(
                 new PrimitiveTypeSerializerFactory(),
-                new PrimitiveArraySerializerFactory()
+                new PrimitiveArraySerializerFactory(),
+                new ListSerializerFactory()
         );
     }
 

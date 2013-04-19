@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>pl.charmas.parcelablegenerator</id>
     <name>Android Parcelable code generator.</name>
-    <version>0.1</version>
+    <version>0.2</version>
     <vendor email="michal@charmas.pl" url="http://blog.charmas.pl">Michal Charmas</vendor>
 
     <description><![CDATA[
