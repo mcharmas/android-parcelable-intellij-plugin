@@ -4,6 +4,7 @@ This tool generates Android [Parcelable](https://developer.android.com/reference
 
 ## Installation
 
+Project was built using Java 7 compiler so ensure that you are running your IntelliJ using Java 7 to avoid problems.
 Download ParcelableGenerator.jar, go to IntelliJ *Preferences* -> *Plugins* -> *Install plugin from disk...*.
 
 ## Usage
