@@ -49,7 +49,7 @@
     <actions>
         <!-- Add your actions here -->
         <action id="generateParcelableNew" class="pl.charmas.parcelablegenerator.ParcelableAction"
-                text="Generate Parcelable New"
+                text="Generate Parcelable"
                 description="Generates parcelable based on fields">
             <add-to-group group-id="GenerateGroup" anchor="last"/>
         </action>

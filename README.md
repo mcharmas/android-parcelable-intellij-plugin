@@ -1,7 +1,6 @@
 # IntelliJ Plugin for Android Parcelable boilerplate code generation
 
-This is extremaly early stage project. It can generate serialization and deserialization
-code only for java primitives for now.
+This tool generates Android [Parcelable](https://developer.android.com/reference/android/os/Parcelable.html) implementation based on fields in the class.
 
 ## Installation
 
@@ -12,9 +11,25 @@ Download ParcelableGenerator.jar, go to IntelliJ *Preferences* -> *Plugins* -> *
 Just press alt+insert in editor and select Generate Parcelable. It allows you to select
 fields, which will be serialized.
 
+## Supported parcelable types
+
+* primitive types - ```long, int, float, double, boolean, byte, String```
+* primitive type wrappers (written with ```Parcel.writeValue(Object)``` - ```Integer, Long, Float, Double, Boolean, Byte```
+* primitive type arrays ```boolean[], byte[], char[], double[],  float[], int[], long[]```
+* list type of any object (**Warning: validation is not performed**)
+
+## TODO:
+
+* support for Parcelable fields parcelation
+* validation of list arguments
+* display warning about not serialized fields
+* map and bundle support
+* sparse array support
+* Active Objects support (Binders and stuff)
+
 ## License
 
-	Copyright (C) 2012 Cyril Mottier (http://www.cyrilmottier.com)
+    Copyright (C) 2012 Cyril Mottier (http://www.cyrilmottier.com)
 
 	Licensed under the Apache License, Version 2.0 (the "License");
 	you may not use this file except in compliance with the License.
