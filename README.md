@@ -12,6 +12,8 @@ Download ParcelableGenerator.jar, go to IntelliJ *Preferences* -> *Plugins* -> *
 Just press alt+insert in editor and select Generate Parcelable. It allows you to select
 fields, which will be serialized.
 
+![Screenshot](screenshot.png)
+
 ## Supported parcelable types
 
 * primitive types - ```long, int, float, double, boolean, byte, String```
