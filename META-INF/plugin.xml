@@ -18,7 +18,7 @@
 <idea-plugin version="2">
     <id>pl.charmas.parcelablegenerator</id>
     <name>Android Parcelable code generator.</name>
-    <version>0.2</version>
+    <version>0.3</version>
     <vendor email="michal@charmas.pl" url="http://blog.charmas.pl">Michal Charmas</vendor>
 
     <description><![CDATA[
@@ -50,7 +50,7 @@
         <!-- Add your actions here -->
         <action id="generateParcelableNew" class="pl.charmas.parcelablegenerator.ParcelableAction"
                 text="Generate Parcelable"
-                description="Generates parcelable based on fields">
+                description="Generates Android Parcelable based on class fields.">
             <add-to-group group-id="GenerateGroup" anchor="last"/>
         </action>
     </actions>
