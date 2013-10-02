@@ -33,7 +33,8 @@ public class CodeGenerator {
         this.typeSerializerFactory = new ChainSerializerFactory(
                 new PrimitiveTypeSerializerFactory(),
                 new PrimitiveArraySerializerFactory(),
-                new ListSerializerFactory()
+                new ListSerializerFactory(),
+                new SerializableSerializerFactory()
         );
     }
 
