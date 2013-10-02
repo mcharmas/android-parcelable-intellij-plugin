@@ -19,6 +19,7 @@ fields, which will be serialized.
 * primitive types - ```long, int, float, double, boolean, byte, String```
 * primitive type wrappers (written with ```Parcel.writeValue(Object)``` - ```Integer, Long, Float, Double, Boolean, Byte```
 * primitive type arrays ```boolean[], byte[], char[], double[],  float[], int[], long[]```
+* std java serializable types: ```Date, BigDecimal```
 * list type of any object (**Warning: validation is not performed**)
 
 ## TODO:
