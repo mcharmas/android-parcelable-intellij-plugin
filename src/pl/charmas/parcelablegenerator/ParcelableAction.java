@@ -37,7 +37,7 @@ public class ParcelableAction extends AnAction {
         GenerateDialog dlg = new GenerateDialog(psiClass);
         dlg.show();
         if (dlg.isOK()) {
-            generateParcelable(psiClass, dlg.getFields());
+            generateParcelable(psiClass, dlg.getSelectedFields());
         }
     }
 
