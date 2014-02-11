@@ -18,12 +18,13 @@ Just press **ALT + Insert** (or your equivalent keybinding for code generation) 
 ## Supported parcelable types
 
  * Types implementing Parcelable
+ * Custom support (avoids `Serializable`/`Parcelable` implementation) for: `Date`, `Bundle`
  * Types implementing Serializable
+ * List of `Parcelable` objects
+ * Enumerations
  * Primitive types: `long`, `int`, `float`, `double`, `boolean`, `byte`, `String`
  * Primitive type wrappers (written with `Parcel.writeValue(Object)`): `Integer`, `Long`, `Float`, `Double`, `Boolean`, `Byte`
  * Primitive type arrays: `boolean[]`, `byte[]`, `char[]`, `double[]`, `float[]`, `int[]`, `long[]`
- * Custom support (avoids `Serializable`/`Parcelable` implementation) for: `Date`, `Bundle`
- * List of `Parcelable` objects
  * List type of any object (**Warning: validation is not performed**)
 
 ## TODO
