@@ -3,8 +3,6 @@ package pl.charmas.parcelablegenerator.typeserializers;
 import com.intellij.psi.PsiType;
 import pl.charmas.parcelablegenerator.typeserializers.serializers.SerializableObjectSerializer;
 
-import java.util.HashSet;
-
 /**
  * Modified by Dallas Gutauckis [dallas@gutauckis.com]
  */

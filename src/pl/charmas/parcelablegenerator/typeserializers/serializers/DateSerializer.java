@@ -16,6 +16,7 @@
 package pl.charmas.parcelablegenerator.typeserializers.serializers;
 
 import com.intellij.psi.PsiField;
+import org.apache.xmlbeans.impl.common.NameUtil;
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
 
 /**
@@ -36,8 +37,9 @@ public class DateSerializer implements TypeSerializer {
     @Override
     public String readValue(PsiField field, String parcel) {
         String fieldName = field.getName();
+        String tmpFieldName = NameUtil.upperCaseFirstLetter(fieldName);
         String formatted = String.format("long tmp%s = %s.readLong(); " +
-                "this.%s = tmp%s == %s ? null : new Date(tmp%s);", fieldName, parcel, fieldName, fieldName, NULL_VALUE, fieldName);
+                "this.%s = tmp%s == %s ? null : new Date(tmp%s);", tmpFieldName, parcel, fieldName, tmpFieldName, NULL_VALUE, tmpFieldName);
         return formatted;
     }
 }

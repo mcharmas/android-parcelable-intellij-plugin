@@ -74,12 +74,25 @@ final public class PsiUtils {
             return true;
         }
 
-        for (PsiType psiType : type.getSuperTypes()) {
-            if (psiType.getCanonicalText().equals(canonicalName)) {
+        if (getNonGenericType(type).equals(canonicalName)) {
+            return true;
+        }
+
+        for (PsiType iterType : type.getSuperTypes()) {
+            if (iterType.getCanonicalText().equals(canonicalName) || getNonGenericType(iterType).equals(canonicalName)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    public static String getNonGenericType(PsiType type) {
+        if (type instanceof PsiClassType) {
+            PsiClassType pct = (PsiClassType) type;
+            return pct.resolve().getQualifiedName();
+        }
+
+        return type.getCanonicalText();
     }
 }

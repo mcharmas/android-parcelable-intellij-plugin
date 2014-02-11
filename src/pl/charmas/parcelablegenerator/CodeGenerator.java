@@ -38,6 +38,7 @@ public class CodeGenerator {
         this.typeSerializerFactory = new ChainSerializerFactory(
                 new BundleSerializerFactory(),
                 new DateSerializerFactory(),
+                new EnumerationSerializerFactory(),
                 new ParcelableListSerializerFactory(),
                 new PrimitiveTypeSerializerFactory(),
                 new PrimitiveArraySerializerFactory(),
