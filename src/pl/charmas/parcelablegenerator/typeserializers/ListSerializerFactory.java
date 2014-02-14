@@ -17,16 +17,17 @@ package pl.charmas.parcelablegenerator.typeserializers;
 
 import com.intellij.psi.PsiType;
 import pl.charmas.parcelablegenerator.typeserializers.serializers.ListPrimitiveSerializer;
+import pl.charmas.parcelablegenerator.util.PsiUtils;
 
 public class ListSerializerFactory implements TypeSerializerFactory {
+    private TypeSerializer mSerializer = new ListPrimitiveSerializer();
+
     @Override
     public TypeSerializer getSerializer(PsiType psiType) {
-        String typeName = psiType.getCanonicalText();
-        if (typeName.startsWith("java.util.List")) {
-            String genericTypeName = typeName.replaceAll("java.util.List<", "");
-            genericTypeName = genericTypeName.replaceAll(">", "");
-            return new ListPrimitiveSerializer(genericTypeName);
+        if (PsiUtils.isOfType(psiType, "java.util.List")) {
+            return mSerializer;
         }
+
         return null;
     }
 }

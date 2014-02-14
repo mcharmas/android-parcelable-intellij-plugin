@@ -49,8 +49,8 @@
     <actions>
         <!-- Add your actions here -->
         <action id="generateParcelableNew" class="pl.charmas.parcelablegenerator.ParcelableAction"
-                text="Generate Parcelable"
-                description="Generates Android Parcelable based on class fields.">
+                text="Parcelable"
+                description="Generates Android Parcelable based on class fields">
             <add-to-group group-id="GenerateGroup" anchor="last"/>
         </action>
     </actions>
