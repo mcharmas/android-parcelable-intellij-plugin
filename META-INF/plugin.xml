@@ -15,7 +15,7 @@
 ** limitations under the License.
 */
 -->
-<idea-plugin version="2">
+<idea-plugin version="3">
     <id>pl.charmas.parcelablegenerator</id>
     <name>Android Parcelable code generator.</name>
     <version>0.5</version>

@@ -4,7 +4,10 @@ This tool generates Android [Parcelable](https://developer.android.com/reference
 
 ## Installation
 
- 0. Download `ParcelableGenerator.jar`
+ Plugin is uploaded to plugin repository.
+ If you like, you can install it manually:
+
+ 0. Download `ParcelableGenerator-0.5.jar`
  0. Open IntelliJ/Android Studio
  0. *Preferences* -> *Plugins* -> *Install plugin from disk...*.
  0. Choose the downloaded jar file
