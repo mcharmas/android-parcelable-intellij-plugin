@@ -3,22 +3,28 @@ package pl.charmas.parcelablegenerator.typeserializers;
 import com.intellij.psi.PsiType;
 import pl.charmas.parcelablegenerator.typeserializers.serializers.SerializableObjectSerializer;
 
-import java.util.HashSet;
-
+/**
+ * Modified by Dallas Gutauckis [dallas@gutauckis.com]
+ */
 public class SerializableSerializerFactory implements TypeSerializerFactory {
-
-    private final HashSet<String> handledTypes = new HashSet<String>();
+    private TypeSerializer mSerializer;
 
     public SerializableSerializerFactory() {
-        handledTypes.add("java.util.Date");
-        handledTypes.add("java.math.BigDecimal");
+        mSerializer = new SerializableObjectSerializer();
     }
 
     @Override
     public TypeSerializer getSerializer(PsiType psiType) {
-        if (handledTypes.contains(psiType.getCanonicalText())) {
-            return new SerializableObjectSerializer(psiType.getCanonicalText());
+        PsiType[] superTypes = psiType.getSuperTypes();
+
+        for (PsiType superType : superTypes) {
+            String canonicalText = superType.getCanonicalText();
+
+            if ("java.io.Serializable".equals(canonicalText)) {
+                return mSerializer;
+            }
         }
+
         return null;
     }
 }

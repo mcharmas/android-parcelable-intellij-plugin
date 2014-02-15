@@ -4,44 +4,72 @@ This tool generates Android [Parcelable](https://developer.android.com/reference
 
 ## Installation
 
-Download ParcelableGenerator.jar, go to IntelliJ *Preferences* -> *Plugins* -> *Install plugin from disk...*.
+ 0. Download `ParcelableGenerator.jar`
+ 0. Open IntelliJ/Android Studio
+ 0. *Preferences* -> *Plugins* -> *Install plugin from disk...*.
+ 0. Choose the downloaded jar file
 
 ## Usage
 
-Just press alt+insert in editor and select Generate Parcelable. It allows you to select
-fields, which will be serialized.
+Just press **ALT + Insert** (or your equivalent keybinding for code generation) in your editor and select **Generate Parcelable**. It allows you to select the fields to be parceled.
 
 ![Screenshot](screenshot.png)
 
 ## Supported parcelable types
 
-* primitive types - ```long, int, float, double, boolean, byte, String```
-* primitive type wrappers (written with ```Parcel.writeValue(Object)``` - ```Integer, Long, Float, Double, Boolean, Byte```
-* primitive type arrays ```boolean[], byte[], char[], double[],  float[], int[], long[]```
-* std java serializable types: ```Date, BigDecimal```
-* list type of any object (**Warning: validation is not performed**)
+ * Types implementing Parcelable
+ * Custom support (avoids `Serializable`/`Parcelable` implementation) for: `Date`, `Bundle`
+ * Types implementing Serializable
+ * List of `Parcelable` objects
+ * Enumerations
+ * Primitive types: `long`, `int`, `float`, `double`, `boolean`, `byte`, `String`
+ * Primitive type wrappers (written with `Parcel.writeValue(Object)`): `Integer`, `Long`, `Float`, `Double`, `Boolean`, `Byte`
+ * Primitive type arrays: `boolean[]`, `byte[]`, `char[]`, `double[]`, `float[]`, `int[]`, `long[]`
+ * List type of any object (**Warning: validation is not performed**)
 
-## TODO:
+## TODO
 
-* support for Parcelable fields parcelation
-* validation of list arguments
-* display warning about not serialized fields
-* map and bundle support
-* sparse array support
-* Active Objects support (Binders and stuff)
+ * Validation of List arguments
+ * Display warning about not serialized fields
+ * Map support
+ * SparseArray support
+ * Active Objects support (Binders and stuff)
+ 
+## Contributors
+
+ * [Michał Charmas](https://github.com/mcharmas/)
+ * [Dallas Gutauckis](~http://github.com/dallasgutauckis)
 
 ## License
 
-    Copyright (C) 2013 Michał Charmas (http://blog.charmas.pl)
+```
+Copyright (C) 2014 Dallas Gutauckis (http://dallasgutauckis.com)
+    
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
+     http://www.apache.org/licenses/LICENSE-2.0	     
 
-	     http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
 
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
+```
+Copyright (C) 2013 Michał Charmas (http://blog.charmas.pl)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0	     
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
