@@ -1,6 +1,11 @@
 package pl.charmas.parcelablegenerator.typeserializers;
 
+import com.intellij.psi.PsiClassType;
+import com.intellij.psi.PsiEnumConstant;
+import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiType;
+import com.intellij.psi.impl.source.PsiClassReferenceType;
+import com.intellij.psi.impl.source.PsiEnumConstantImpl;
 import pl.charmas.parcelablegenerator.typeserializers.serializers.EnumerationSerializer;
 import pl.charmas.parcelablegenerator.util.PsiUtils;
 
@@ -12,7 +17,7 @@ public class EnumerationSerializerFactory implements TypeSerializerFactory {
 
     @Override
     public TypeSerializer getSerializer(PsiType psiType) {
-        if (PsiUtils.isOfType(psiType, "java.lang.Enum")) {
+        if (psiType instanceof PsiClassReferenceType && ((PsiClassReferenceType) psiType).resolve().isEnum()) {
             return mSerializer;
         }
 

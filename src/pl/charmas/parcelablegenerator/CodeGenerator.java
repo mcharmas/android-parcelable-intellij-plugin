@@ -26,16 +26,17 @@ import java.util.List;
  * Quite a few changes here by Dallas Gutauckis [dallas@gutauckis.com]
  */
 public class CodeGenerator {
-
     public static final String CREATOR_NAME = "CREATOR";
-    private final PsiClass psiClass;
-    private final List<PsiField> fields;
-    private final TypeSerializerFactory typeSerializerFactory;
+
+    private final PsiClass mClass;
+    private final List<PsiField> mFields;
+    private final TypeSerializerFactory mTypeSerializerFactory;
 
     public CodeGenerator(PsiClass psiClass, List<PsiField> fields) {
-        this.psiClass = psiClass;
-        this.fields = fields;
-        this.typeSerializerFactory = new ChainSerializerFactory(
+        mClass = psiClass;
+        mFields = fields;
+
+        this.mTypeSerializerFactory = new ChainSerializerFactory(
                 new BundleSerializerFactory(),
                 new DateSerializerFactory(),
                 new EnumerationSerializerFactory(),
@@ -49,6 +50,101 @@ public class CodeGenerator {
     }
 
     private String generateStaticCreator(PsiClass psiClass) {
+        StringBuilder sb = new StringBuilder("public static android.os.Parcelable.Creator<");
+
+        String className = psiClass.getName();
+
+        sb.append(className).append("> CREATOR = new android.os.Parcelable.Creator<").append(className).append(">(){")
+                .append("public ").append(className).append(" createFromParcel(android.os.Parcel source) {")
+                .append("return new ").append(className).append("(source);}")
+                .append("public ").append(className).append("[] newArray(int size) {")
+                .append("return new ").append(className).append("[size];}")
+                .append("};");
+        return sb.toString();
+    }
+
+    private String generateConstructor(List<PsiField> fields, PsiClass psiClass) {
+        String className = psiClass.getName();
+
+        StringBuilder sb = new StringBuilder("private ");
+
+        // Create the Parcelable-required constructor
+        sb.append(className).append("(android.os.Parcel in) {");
+
+        // Creates all of the deserialization methods for the given fields
+        for (PsiField field : fields) {
+            sb.append(getSerializerForType(field).readValue(field, "in"));
+        }
+
+        sb.append("}");
+        return sb.toString();
+    }
+
+    private String generateWriteToParcel(List<PsiField> fields) {
+        StringBuilder sb = new StringBuilder("@Override public void writeToParcel(android.os.Parcel dest, int flags) {");
+
+        for (PsiField field : fields) {
+            sb.append(getSerializerForType(field).writeValue(field, "dest", "flags"));
+        }
+
+        sb.append("}");
+
+        return sb.toString();
+    }
+
+    private TypeSerializer getSerializerForType(PsiField field) {
+        return mTypeSerializerFactory.getSerializer(field.getType());
+    }
+
+    private String generateDescribeContents() {
+        return "@Override public int describeContents() { return 0; }";
+    }
+
+    public void generate() {
+        PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(mClass.getProject());
+
+        removeExistingParcelableImplementation(mClass);
+
+        // Describe contents method
+        PsiMethod describeContentsMethod = elementFactory.createMethodFromText(generateDescribeContents(), mClass);
+        // Method for writing to the parcel
+        PsiMethod writeToParcelMethod = elementFactory.createMethodFromText(generateWriteToParcel(mFields), mClass);
+
+        // Default constructor if needed
+        String defaultConstructorString = generateDefaultConstructor(mClass);
+        PsiMethod defaultConstructor = null;
+
+        if (defaultConstructorString != null) {
+            defaultConstructor = elementFactory.createMethodFromText(defaultConstructorString, mClass);
+        }
+
+        // Constructor
+        PsiMethod constructor = elementFactory.createMethodFromText(generateConstructor(mFields, mClass), mClass);
+        // CREATOR
+        PsiField creatorField = elementFactory.createFieldFromText(generateStaticCreator(mClass), mClass);
+
+        JavaCodeStyleManager styleManager = JavaCodeStyleManager.getInstance(mClass.getProject());
+
+        // Shorten all class references
+        styleManager.shortenClassReferences(mClass.addBefore(describeContentsMethod, mClass.getLastChild()));
+        styleManager.shortenClassReferences(mClass.addBefore(writeToParcelMethod, mClass.getLastChild()));
+
+        // Only adds if available
+        if (defaultConstructor != null) {
+            styleManager.shortenClassReferences(mClass.addBefore(defaultConstructor, mClass.getLastChild()));
+        }
+
+        styleManager.shortenClassReferences(mClass.addBefore(constructor, mClass.getLastChild()));
+        styleManager.shortenClassReferences(mClass.addBefore(creatorField, mClass.getLastChild()));
+
+        makeClassImplementParcelable(elementFactory);
+    }
+
+    /**
+     * Strips the
+     * @param psiClass
+     */
+    private void removeExistingParcelableImplementation(PsiClass psiClass) {
         PsiField[] allFields = psiClass.getAllFields();
 
         // Look for an existing CREATOR and remove it
@@ -59,77 +155,25 @@ public class CodeGenerator {
             }
         }
 
-        StringBuilder sb = new StringBuilder("public static android.os.Parcelable.Creator<");
-        String name = psiClass.getName();
-        sb.append(name).append("> CREATOR = new android.os.Parcelable.Creator<").append(name).append(">(){")
-                .append("public ").append(name).append(" createFromParcel(android.os.Parcel source) {")
-                .append("return new ").append(name).append("(source);}")
-                .append("public ").append(name).append("[] newArray(int size) {")
-                .append("return new ").append(name).append("[size];}")
-                .append("};");
-        return sb.toString();
+        findAndRemoveMethod(psiClass, psiClass.getName(), "android.os.Parcel");
+        findAndRemoveMethod(psiClass, "describeContents");
+        findAndRemoveMethod(psiClass, "writeToParcel", "android.os.Parcel", "int");
     }
 
-    private String generateConstructor(List<PsiField> fields, PsiClass psiClass) {
-        findAndRemoveMethod(psiClass.getName(), "android.os.Parcel");
-
-        StringBuilder sb = new StringBuilder("private ").append(psiClass.getName()).append("(android.os.Parcel in) {");
-
-        for (PsiField field : fields) {
-            sb.append(getSerializerForType(field).readValue(field, "in"));
+    private String generateDefaultConstructor(PsiClass clazz) {
+        // Check for any constructors; if none exist, we'll make a default one
+        if (clazz.getConstructors().length == 0) {
+            // No constructors exist, make a default one for convenience
+            StringBuilder sb = new StringBuilder();
+            sb.append("public ").append(clazz.getName()).append("(){}").append('\n');
+            return sb.toString();
+        } else {
+        return null;
         }
-
-        sb.append("}");
-        return sb.toString();
-    }
-
-    private String generateWriteToParcel(List<PsiField> fields) {
-        // Remove existing method
-        findAndRemoveMethod("writeToParcel", "android.os.Parcel", "int");
-
-        StringBuilder sb = new StringBuilder("@Override public void writeToParcel(android.os.Parcel dest, int flags) {");
-        for (PsiField field : fields) {
-            sb.append(getSerializerForType(field).writeValue(field, "dest", "flags"));
-        }
-        sb.append("}");
-        return sb.toString();
-    }
-
-    private TypeSerializer getSerializerForType(PsiField field) {
-        return typeSerializerFactory.getSerializer(field.getType());
-    }
-
-    private String generateDescribeContents() {
-        findAndRemoveMethod("describeContents");
-
-        return "@Override public int describeContents() { return 0; }";
-    }
-
-    public void generate() {
-        PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(psiClass.getProject());
-
-        // Describe contents method
-        PsiMethod describeContentsMethod = elementFactory.createMethodFromText(generateDescribeContents(), psiClass);
-        // Method for writing to the parcel
-        PsiMethod writeToParcelMethod = elementFactory.createMethodFromText(generateWriteToParcel(fields), psiClass);
-        // Constructor
-        PsiMethod constructor = elementFactory.createMethodFromText(generateConstructor(fields, psiClass), psiClass);
-        // CREATOR
-        PsiField creatorField = elementFactory.createFieldFromText(generateStaticCreator(psiClass), psiClass);
-
-        JavaCodeStyleManager styleManager = JavaCodeStyleManager.getInstance(psiClass.getProject());
-
-        // Shorten all class references
-        styleManager.shortenClassReferences(psiClass.addBefore(describeContentsMethod, psiClass.getLastChild()));
-        styleManager.shortenClassReferences(psiClass.addBefore(writeToParcelMethod, psiClass.getLastChild()));
-        styleManager.shortenClassReferences(psiClass.addBefore(constructor, psiClass.getLastChild()));
-        styleManager.shortenClassReferences(psiClass.addBefore(creatorField, psiClass.getLastChild()));
-
-        makeClassImplementParcelable(elementFactory);
     }
 
     private void makeClassImplementParcelable(PsiElementFactory elementFactory) {
-        final PsiClassType[] implementsListTypes = psiClass.getImplementsListTypes();
+        final PsiClassType[] implementsListTypes = mClass.getImplementsListTypes();
         final String implementsType = "android.os.Parcelable";
 
         for (PsiClassType implementsListType : implementsListTypes) {
@@ -141,8 +185,8 @@ public class CodeGenerator {
             }
         }
 
-        PsiJavaCodeReferenceElement implementsReference = elementFactory.createReferenceFromText(implementsType, psiClass);
-        PsiReferenceList implementsList = psiClass.getImplementsList();
+        PsiJavaCodeReferenceElement implementsReference = elementFactory.createReferenceFromText(implementsType, mClass);
+        PsiReferenceList implementsList = mClass.getImplementsList();
 
         if (implementsList != null) {
             implementsList.add(implementsReference);
@@ -150,10 +194,9 @@ public class CodeGenerator {
     }
 
 
-
-    private void findAndRemoveMethod(String methodName, String... arguments) {
-        // Maybe there's an easier way to do this with psiClass.findMethodBySignature(), but I'm not an expert on Psi*
-        PsiMethod[] methods = psiClass.findMethodsByName(methodName, false);
+    private static void findAndRemoveMethod(PsiClass clazz, String methodName, String... arguments) {
+        // Maybe there's an easier way to do this with mClass.findMethodBySignature(), but I'm not an expert on Psi*
+        PsiMethod[] methods = clazz.findMethodsByName(methodName, false);
 
         for (PsiMethod method : methods) {
             PsiParameterList parameterList = method.getParameterList();

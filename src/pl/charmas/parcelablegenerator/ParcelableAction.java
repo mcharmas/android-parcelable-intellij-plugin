@@ -34,8 +34,10 @@ public class ParcelableAction extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
         PsiClass psiClass = getPsiClassFromContext(e);
+
         GenerateDialog dlg = new GenerateDialog(psiClass);
         dlg.show();
+
         if (dlg.isOK()) {
             generateParcelable(psiClass, dlg.getSelectedFields());
         }
