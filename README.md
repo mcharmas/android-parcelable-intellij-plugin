@@ -7,14 +7,14 @@ This tool generates Android [Parcelable](https://developer.android.com/reference
  Plugin is uploaded to plugin repository.
  If you like, you can install it manually:
 
- 0. Download `ParcelableGenerator` [release](https://github.com/mcharmas/android-parcelable-intellij-plugin/releases/tag/v0.5)
+ 0. Download `ParcelableGenerator` [release](https://github.com/mcharmas/android-parcelable-intellij-plugin/releases/tag/v0.6)
  0. Open IntelliJ/Android Studio
  0. *Preferences* -> *Plugins* -> *Install plugin from disk...*.
  0. Choose the downloaded jar file
 
 ## Usage
 
-Just press **ALT + Insert** (or your equivalent keybinding for code generation) in your editor and select **Generate Parcelable**. It allows you to select the fields to be parceled.
+Just press **ALT + Insert** (or your equivalent keybinding for code generation) in your editor and select **Parcelable**. It allows you to select the fields to be parceled.
 
 ![Screenshot](screenshot.png)
 
@@ -62,7 +62,7 @@ limitations under the License.
 ```
 
 ```
-Copyright (C) 2013 Michał Charmas (http://blog.charmas.pl)
+Copyright (C) 2014 Michał Charmas (http://blog.charmas.pl)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
