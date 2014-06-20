@@ -50,7 +50,7 @@ public class CodeGenerator {
     }
 
     private String generateStaticCreator(PsiClass psiClass) {
-        StringBuilder sb = new StringBuilder("public static android.os.Parcelable.Creator<");
+        StringBuilder sb = new StringBuilder("public static final android.os.Parcelable.Creator<");
 
         String className = psiClass.getName();
 
