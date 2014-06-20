@@ -8,7 +8,7 @@
 ##Version 0.2
 
 * added nullable primitives support
-* added primite array support
+* added primitive array support
 * added boolean sparse array support
 * added list list serialization
 
