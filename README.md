@@ -1,6 +1,6 @@
-# IntelliJ Plugin for Android Parcelable boilerplate code generation
+# IntelliJ/Android Studio Plugin for Android Parcelable boilerplate code generation
 
-This tool generates Android [Parcelable](https://developer.android.com/reference/android/os/Parcelable.html) implementation based on fields in the class.
+This tool generates an Android [Parcelable](https://developer.android.com/reference/android/os/Parcelable.html) implementation based on fields in the class.
 
 ## Installation
 
@@ -41,28 +41,13 @@ Just press **ALT + Insert** (or your equivalent keybinding for code generation) 
 ## Contributors
 
  * [Michał Charmas](https://github.com/mcharmas/)
- * [Dallas Gutauckis](~http://github.com/dallasgutauckis)
+ * [Dallas Gutauckis](http://github.com/dallasgutauckis)
 
 ## License
 
 ```
-Copyright (C) 2014 Dallas Gutauckis (http://dallasgutauckis.com)
-    
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0	     
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
-
-```
 Copyright (C) 2014 Michał Charmas (http://blog.charmas.pl)
+Copyright (C) 2014 Dallas Gutauckis (http://dallasgutauckis.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
