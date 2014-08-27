@@ -93,7 +93,7 @@ public class GenerateDialog extends DialogWrapper {
     private List<PsiField> getClassFields(PsiField[] allFields) {
         final List<PsiField> fields = new ArrayList<PsiField>();
         for (PsiField field : allFields) {
-            if (!field.hasModifierProperty(PsiModifier.STATIC)) {
+            if (!field.hasModifierProperty(PsiModifier.STATIC) && !field.hasModifierProperty(PsiModifier.TRANSIENT)) {
                 fields.add(field);
             }
         }
