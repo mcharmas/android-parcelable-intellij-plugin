@@ -21,16 +21,17 @@ import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiModifier;
-import com.intellij.psi.search.SearchScope;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBList;
+
 import org.jetbrains.annotations.Nullable;
 
-import javax.lang.model.element.Modifier;
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 public class GenerateDialog extends DialogWrapper {
 
@@ -48,7 +49,7 @@ public class GenerateDialog extends DialogWrapper {
 
         for (PsiField field : allFields) {
             // Exclude static fields
-            if (!field.hasModifierProperty(PsiModifier.STATIC)) {
+            if (!field.hasModifierProperty(PsiModifier.STATIC) && !field.hasModifierProperty(PsiModifier.TRANSIENT)) {
                 fields[i++] = field;
             }
         }

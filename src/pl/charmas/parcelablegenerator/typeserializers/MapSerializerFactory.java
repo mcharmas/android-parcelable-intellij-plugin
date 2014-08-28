@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Michał Charmas (http://blog.charmas.pl)
+ * Copyright (C) 2014 Dallas Gutauckis (http://dallasgutauckis.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,15 @@ package pl.charmas.parcelablegenerator.typeserializers;
 
 import com.intellij.psi.PsiType;
 
-import pl.charmas.parcelablegenerator.typeserializers.serializers.ListPrimitiveSerializer;
+import pl.charmas.parcelablegenerator.typeserializers.serializers.MapSerializer;
 import pl.charmas.parcelablegenerator.util.PsiUtils;
 
-public class ListSerializerFactory implements TypeSerializerFactory {
-    private TypeSerializer mSerializer = new ListPrimitiveSerializer();
+public class MapSerializerFactory implements TypeSerializerFactory {
+    private TypeSerializer mSerializer = new MapSerializer();
 
     @Override
     public TypeSerializer getSerializer(PsiType psiType) {
-        if (PsiUtils.isOfType(psiType, "java.util.List")) {
+        if (PsiUtils.isOfType(psiType, "java.util.Map")) {
             return mSerializer;
         }
 

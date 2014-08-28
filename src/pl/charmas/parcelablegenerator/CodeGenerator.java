@@ -15,11 +15,34 @@
  */
 package pl.charmas.parcelablegenerator;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiClassType;
+import com.intellij.psi.PsiElementFactory;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiJavaCodeReferenceElement;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiParameterList;
+import com.intellij.psi.PsiReferenceList;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-import pl.charmas.parcelablegenerator.typeserializers.*;
 
 import java.util.List;
+
+import pl.charmas.parcelablegenerator.typeserializers.BundleSerializerFactory;
+import pl.charmas.parcelablegenerator.typeserializers.ChainSerializerFactory;
+import pl.charmas.parcelablegenerator.typeserializers.DateSerializerFactory;
+import pl.charmas.parcelablegenerator.typeserializers.EnumerationSerializerFactory;
+import pl.charmas.parcelablegenerator.typeserializers.ListSerializerFactory;
+import pl.charmas.parcelablegenerator.typeserializers.MapSerializerFactory;
+import pl.charmas.parcelablegenerator.typeserializers.ParcelableListSerializerFactory;
+import pl.charmas.parcelablegenerator.typeserializers.ParcelableSerializerFactory;
+import pl.charmas.parcelablegenerator.typeserializers.PrimitiveArraySerializerFactory;
+import pl.charmas.parcelablegenerator.typeserializers.PrimitiveTypeSerializerFactory;
+import pl.charmas.parcelablegenerator.typeserializers.SerializableSerializerFactory;
+import pl.charmas.parcelablegenerator.typeserializers.SparseArraySerializerFactory;
+import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
+import pl.charmas.parcelablegenerator.typeserializers.TypeSerializerFactory;
 
 
 /**
@@ -45,7 +68,9 @@ public class CodeGenerator {
                 new PrimitiveArraySerializerFactory(),
                 new ListSerializerFactory(),
                 new ParcelableSerializerFactory(),
-                new SerializableSerializerFactory()
+                new SerializableSerializerFactory(),
+                new SparseArraySerializerFactory(),
+                new MapSerializerFactory()
         );
     }
 
