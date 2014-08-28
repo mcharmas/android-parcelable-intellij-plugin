@@ -17,15 +17,15 @@ package pl.charmas.parcelablegenerator.typeserializers;
 
 import com.intellij.psi.PsiType;
 
-import pl.charmas.parcelablegenerator.typeserializers.serializers.ListPrimitiveSerializer;
+import pl.charmas.parcelablegenerator.typeserializers.serializers.SparseArraySerializer;
 import pl.charmas.parcelablegenerator.util.PsiUtils;
 
-public class ListSerializerFactory implements TypeSerializerFactory {
-    private TypeSerializer mSerializer = new ListPrimitiveSerializer();
+public class SparseArraySerializerFactory implements TypeSerializerFactory {
+    private TypeSerializer mSerializer = new SparseArraySerializer();
 
     @Override
     public TypeSerializer getSerializer(PsiType psiType) {
-        if (PsiUtils.isOfType(psiType, "java.util.List")) {
+        if (PsiUtils.isOfType(psiType, "android.util.SparseArray")) {
             return mSerializer;
         }
 

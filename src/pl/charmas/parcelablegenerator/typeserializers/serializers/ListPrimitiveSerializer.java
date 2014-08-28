@@ -16,19 +16,39 @@
 package pl.charmas.parcelablegenerator.typeserializers.serializers;
 
 import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiType;
+
+import java.util.List;
+
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
+import pl.charmas.parcelablegenerator.util.PsiUtils;
 
 public class ListPrimitiveSerializer implements TypeSerializer {
 
+    public String writeValue(String parcel, String assignTo) {
+        return parcel + ".writeList(" + assignTo + ");";
+    }
+
+    public String readValue(String genericType, String assignTo) {
+        return assignTo + " = new java.util.ArrayList<" + genericType + ">();" +
+                       "in.readList(" + assignTo + " ," + genericType + ".class.getClassLoader());";
+    }
+
     @Override
     public String writeValue(PsiField field, String parcel, String flags) {
-        return parcel + ".writeList(this." + field.getName() + ");";
+        final String fieldName = field.getName();
+        return writeValue(parcel, "this." + fieldName);
     }
 
     @Override
     public String readValue(PsiField field, String parcel) {
-        String typeName = field.getType().getCanonicalText();
-        return "this." + field.getName() + " = new java.util.ArrayList<" + typeName + ">();" +
-                "in.readList(this." + field.getName() + " ," + typeName + ".class.getClassLoader());";
+        final List<PsiType> resolvedGenerics = PsiUtils.getResolvedGenerics(field.getType());
+
+        // Assumes a List never has more than one generic type
+        String genericType = resolvedGenerics.get(0).getCanonicalText();
+
+        final String fieldName = field.getName();
+
+        return readValue(genericType, "this." + fieldName);
     }
 }
