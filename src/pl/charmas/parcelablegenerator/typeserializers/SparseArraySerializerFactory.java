@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Michał Charmas (http://blog.charmas.pl)
+ * Copyright (C) 2014 Dallas Gutauckis (http://dallasgutauckis.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
