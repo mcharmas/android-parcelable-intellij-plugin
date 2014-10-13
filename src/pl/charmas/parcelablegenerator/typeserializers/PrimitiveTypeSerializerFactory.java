@@ -17,6 +17,7 @@ package pl.charmas.parcelablegenerator.typeserializers;
 
 import com.intellij.psi.PsiType;
 import pl.charmas.parcelablegenerator.typeserializers.serializers.BooleanPrimitiveSerializer;
+import pl.charmas.parcelablegenerator.typeserializers.serializers.CharPrimitiveSerializer;
 import pl.charmas.parcelablegenerator.typeserializers.serializers.NullablePrimitivesSerializer;
 import pl.charmas.parcelablegenerator.typeserializers.serializers.PrimitiveTypeSerializer;
 
@@ -40,6 +41,7 @@ public class PrimitiveTypeSerializerFactory implements TypeSerializerFactory {
         writeMethodsForTypes.put("long", new PrimitiveTypeSerializer("Long"));
         writeMethodsForTypes.put("java.lang.String", new PrimitiveTypeSerializer("String"));
         writeMethodsForTypes.put("boolean", new BooleanPrimitiveSerializer());
+        writeMethodsForTypes.put("char", new CharPrimitiveSerializer());
     }
 
     private void initPrimitives() {
@@ -49,6 +51,7 @@ public class PrimitiveTypeSerializerFactory implements TypeSerializerFactory {
         writeMethodsForTypes.put("java.lang.Integer", new NullablePrimitivesSerializer("java.lang.Integer"));
         writeMethodsForTypes.put("java.lang.Long", new NullablePrimitivesSerializer("java.lang.Long"));
         writeMethodsForTypes.put("java.lang.Boolean", new NullablePrimitivesSerializer("java.lang.Boolean"));
+        writeMethodsForTypes.put("java.lang.Char", new NullablePrimitivesSerializer("java.lang.Char"));
     }
 
     @Override
