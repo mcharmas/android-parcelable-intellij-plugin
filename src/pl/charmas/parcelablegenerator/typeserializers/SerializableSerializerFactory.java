@@ -1,6 +1,7 @@
 package pl.charmas.parcelablegenerator.typeserializers;
 
 import com.intellij.psi.PsiType;
+
 import pl.charmas.parcelablegenerator.typeserializers.serializers.SerializableObjectSerializer;
 import pl.charmas.parcelablegenerator.util.PsiUtils;
 
@@ -17,7 +18,7 @@ public class SerializableSerializerFactory implements TypeSerializerFactory {
     @Override
     public TypeSerializer getSerializer(PsiType psiType) {
         if (PsiUtils.isOfType(psiType, "java.io.Serializable")) {
-                return mSerializer;
+            return mSerializer;
         }
 
         return null;
