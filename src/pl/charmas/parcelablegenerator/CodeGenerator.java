@@ -17,7 +17,9 @@ package pl.charmas.parcelablegenerator;
 
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
+import com.intellij.psi.util.PsiUtil;
 import pl.charmas.parcelablegenerator.typeserializers.*;
+import pl.charmas.parcelablegenerator.util.PsiUtils;
 
 import java.util.List;
 
@@ -65,10 +67,14 @@ public class CodeGenerator {
     private String generateConstructor(List<PsiField> fields, PsiClass psiClass) {
         String className = psiClass.getName();
 
-        StringBuilder sb = new StringBuilder("private ");
+        StringBuilder sb = new StringBuilder("protected ");
 
         // Create the Parcelable-required constructor
         sb.append(className).append("(android.os.Parcel in) {");
+
+        if (hasParcelableSuperclass()) {
+            sb.append("super(in);");
+        }
 
         // Creates all of the deserialization methods for the given fields
         for (PsiField field : fields) {
@@ -81,7 +87,9 @@ public class CodeGenerator {
 
     private String generateWriteToParcel(List<PsiField> fields) {
         StringBuilder sb = new StringBuilder("@Override public void writeToParcel(android.os.Parcel dest, int flags) {");
-
+        if (hasParcelableSuperclass()) {
+            sb.append("super.writeToParcel(dest, flags);");
+        }
         for (PsiField field : fields) {
             sb.append(getSerializerForType(field).writeValue(field, "dest", "flags"));
         }
@@ -139,8 +147,19 @@ public class CodeGenerator {
         makeClassImplementParcelable(elementFactory);
     }
 
+    private boolean hasParcelableSuperclass() {
+        PsiClassType[] superTypes = mClass.getSuperTypes();
+        for (PsiClassType superType : superTypes) {
+            if (PsiUtils.isOfType(superType, "android.os.Parcelable")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Strips the
+     *
      * @param psiClass
      */
     private void removeExistingParcelableImplementation(PsiClass psiClass) {
@@ -163,15 +182,15 @@ public class CodeGenerator {
         // Check for any constructors; if none exist, we'll make a default one
         if (clazz.getConstructors().length == 0) {
             // No constructors exist, make a default one for convenience
-            StringBuilder sb = new StringBuilder();
-            sb.append("public ").append(clazz.getName()).append("(){}").append('\n');
-            return sb.toString();
+            return "public " + clazz.getName() + "(){}" + '\n';
         } else {
-        return null;
+            return null;
         }
     }
 
     private void makeClassImplementParcelable(PsiElementFactory elementFactory) {
+        if (hasParcelableSuperclass()) return;
+
         final PsiClassType[] implementsListTypes = mClass.getImplementsListTypes();
         final String implementsType = "android.os.Parcelable";
 

@@ -39,9 +39,9 @@ public class GenerateDialog extends DialogWrapper {
 
     protected GenerateDialog(PsiClass psiClass) {
         super(psiClass.getProject());
-        setTitle("Select fields for Parcelable generation");
+        setTitle("Select Fields for Parcelable Generation");
 
-        PsiField[] allFields = psiClass.getAllFields();
+        PsiField[] allFields = psiClass.getFields();
         PsiField[] fields = new PsiField[allFields.length];
 
         int i = 0;
