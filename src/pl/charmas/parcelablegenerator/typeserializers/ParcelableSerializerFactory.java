@@ -32,7 +32,7 @@ public class ParcelableSerializerFactory implements TypeSerializerFactory {
         if (PsiUtils.isOfType(psiType, "java.util.List")) {
             List<PsiType> resolvedGenerics = PsiUtils.getResolvedGenerics(psiType);
             for (PsiType resolvedGeneric : resolvedGenerics) {
-                if (isOfType(resolvedGeneric, "android.os.Parcelable")) {
+                if (PsiUtils.isOfType(resolvedGeneric, "android.os.Parcelable")) {
                     return listSerializer;
                 }
             }
@@ -40,18 +40,5 @@ public class ParcelableSerializerFactory implements TypeSerializerFactory {
 
         return null;
     }
-
-    private boolean isOfType(PsiType psiType, String type) {
-        if (PsiUtils.isOfType(psiType, type)) {
-            return true;
-        }
-        for (PsiType superType : psiType.getSuperTypes()) {
-            if (isOfType(superType, type)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 
 }
