@@ -6,6 +6,8 @@ import pl.charmas.parcelablegenerator.typeserializers.serializers.ParcelableList
 import pl.charmas.parcelablegenerator.typeserializers.serializers.ParcelableObjectSerializer;
 import pl.charmas.parcelablegenerator.util.PsiUtils;
 
+import java.util.List;
+
 /**
  * Serializer factory for Parcelable objects
  *
@@ -27,11 +29,28 @@ public class ParcelableSerializerFactory implements TypeSerializerFactory {
             return mSerializer;
         }
 
-        if (PsiUtils.isTypedClass(psiType, "java.util.List", "android.os.Parcelable")) {
-            return listSerializer;
+        if (PsiUtils.isOfType(psiType, "java.util.List")) {
+            List<PsiType> resolvedGenerics = PsiUtils.getResolvedGenerics(psiType);
+            for (PsiType resolvedGeneric : resolvedGenerics) {
+                if (isOfType(resolvedGeneric, "android.os.Parcelable")) {
+                    return listSerializer;
+                }
+            }
         }
 
         return null;
+    }
+
+    private boolean isOfType(PsiType psiType, String type) {
+        if (PsiUtils.isOfType(psiType, type)) {
+            return true;
+        }
+        for (PsiType superType : psiType.getSuperTypes()) {
+            if (isOfType(superType, type)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

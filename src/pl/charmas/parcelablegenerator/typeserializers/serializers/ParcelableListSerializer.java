@@ -6,6 +6,7 @@ import pl.charmas.parcelablegenerator.util.PsiUtils;
 
 /**
  * @author Dallas Gutauckis [dallas@gutauckis.com]
+ * @author Michał Charmas [michal@charmas.pl]
  */
 public class ParcelableListSerializer implements TypeSerializer {
     @Override
@@ -16,6 +17,6 @@ public class ParcelableListSerializer implements TypeSerializer {
     @Override
     public String readValue(PsiField field, String parcel) {
         String paramType = PsiUtils.getResolvedGenerics(field.getType()).get(0).getCanonicalText();
-        return String.format("%s.readTypedList(%s, %s.CREATOR);", parcel, field.getName(), paramType);
+        return String.format("this.%s = %s.createTypedArrayList(%s.CREATOR);", field.getName(), parcel, paramType);
     }
 }
