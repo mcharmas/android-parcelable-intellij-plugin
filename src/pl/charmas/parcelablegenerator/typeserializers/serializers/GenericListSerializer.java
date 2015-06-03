@@ -38,18 +38,18 @@ public class GenericListSerializer implements TypeSerializer {
     public String readValue(PsiField field, String parcel) {
         String genericType = getGenericType(field);
 
-        String listConstructor = !genericType.isEmpty()
-                ? "new java.util.ArrayList<" + genericType + ">();"
-                : "new java.util.ArrayList();";
-
-        String listInitialization = "this." + field.getName() + " = " + listConstructor;
-
-        StringBuilder statement = new StringBuilder(listInitialization);
+        StringBuilder statement = new StringBuilder();
         if (genericType.equals(STRING_TYPE_NAME)) {
-            statement.append(parcel).append(".readStringList(this.").append(field.getName()).append(");");
+            statement.append("this.").append(field.getName()).append("=").append(parcel).append(".createStringArrayList();");
         } else {
+            String listConstructor = !genericType.isEmpty()
+                    ? "new java.util.ArrayList<" + genericType + ">();"
+                    : "new java.util.ArrayList();";
+
+            statement.append("this.").append(field.getName()).append(" = ").append(listConstructor);
             statement.append(parcel).append(".readList(this.").append(field.getName()).append(", List.class.getClassLoader());");
         }
+
         return statement.toString();
     }
 
