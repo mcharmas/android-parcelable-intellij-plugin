@@ -46,8 +46,8 @@ Just press **ALT + Insert** (or your equivalent keybinding for code generation) 
 ## License
 
 ```
-Copyright (C) 2014 Michał Charmas (http://blog.charmas.pl)
-Copyright (C) 2014 Dallas Gutauckis (http://dallasgutauckis.com)
+Copyright (C) 2015 Michał Charmas (http://blog.charmas.pl)
+Copyright (C) 2015 Dallas Gutauckis (http://dallasgutauckis.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

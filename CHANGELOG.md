@@ -1,5 +1,12 @@
 # Change Log
 
+##Version 0.6.2
+
+* Fixed list serialization
+* Added support for parcelable array serialization
+* Added support for string list serization
+* Added inheritance support
+
 ##Version 0.6
 
 * CREATOR is now final - proguard will not touch it now
