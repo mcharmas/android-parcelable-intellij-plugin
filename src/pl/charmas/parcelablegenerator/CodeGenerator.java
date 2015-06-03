@@ -40,7 +40,6 @@ public class CodeGenerator {
                 new BundleSerializerFactory(),
                 new DateSerializerFactory(),
                 new EnumerationSerializerFactory(),
-                new ParcelableListSerializerFactory(),
                 new PrimitiveTypeSerializerFactory(),
                 new PrimitiveArraySerializerFactory(),
                 new ListSerializerFactory(),
