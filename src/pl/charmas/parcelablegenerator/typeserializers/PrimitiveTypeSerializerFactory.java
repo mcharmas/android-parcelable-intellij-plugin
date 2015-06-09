@@ -20,6 +20,7 @@ import pl.charmas.parcelablegenerator.typeserializers.serializers.BooleanPrimiti
 import pl.charmas.parcelablegenerator.typeserializers.serializers.CharPrimitiveSerializer;
 import pl.charmas.parcelablegenerator.typeserializers.serializers.NullablePrimitivesSerializer;
 import pl.charmas.parcelablegenerator.typeserializers.serializers.PrimitiveTypeSerializer;
+import pl.charmas.parcelablegenerator.typeserializers.serializers.ShortPrimitiveSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +38,7 @@ public class PrimitiveTypeSerializerFactory implements TypeSerializerFactory {
         writeMethodsForTypes.put("byte", new PrimitiveTypeSerializer("Byte"));
         writeMethodsForTypes.put("double", new PrimitiveTypeSerializer("Double"));
         writeMethodsForTypes.put("float", new PrimitiveTypeSerializer("Float"));
+        writeMethodsForTypes.put("short", new ShortPrimitiveSerializer());
         writeMethodsForTypes.put("int", new PrimitiveTypeSerializer("Int"));
         writeMethodsForTypes.put("long", new PrimitiveTypeSerializer("Long"));
         writeMethodsForTypes.put("java.lang.String", new PrimitiveTypeSerializer("String"));
@@ -48,6 +50,7 @@ public class PrimitiveTypeSerializerFactory implements TypeSerializerFactory {
         writeMethodsForTypes.put("java.lang.Byte", new NullablePrimitivesSerializer("java.lang.Byte"));
         writeMethodsForTypes.put("java.lang.Double", new NullablePrimitivesSerializer("java.lang.Double"));
         writeMethodsForTypes.put("java.lang.Float", new NullablePrimitivesSerializer("java.lang.Float"));
+        writeMethodsForTypes.put("java.lang.Short", new NullablePrimitivesSerializer("java.lang.Short"));
         writeMethodsForTypes.put("java.lang.Integer", new NullablePrimitivesSerializer("java.lang.Integer"));
         writeMethodsForTypes.put("java.lang.Long", new NullablePrimitivesSerializer("java.lang.Long"));
         writeMethodsForTypes.put("java.lang.Boolean", new NullablePrimitivesSerializer("java.lang.Boolean"));
