@@ -25,8 +25,8 @@ Just press **ALT + Insert** (or your equivalent keybinding for code generation) 
  * Types implementing Serializable
  * List of `Parcelable` objects
  * Enumerations
- * Primitive types: `long`, `int`, `float`, `double`, `boolean`, `byte`, `String`
- * Primitive type wrappers (written with `Parcel.writeValue(Object)`): `Integer`, `Long`, `Float`, `Double`, `Boolean`, `Byte`
+ * Primitive types: `long`, `short`, `int`, `float`, `double`, `boolean`, `byte`, `String`
+ * Primitive type wrappers (written with `Parcel.writeValue(Object)`): `Short`, `Integer`, `Long`, `Float`, `Double`, `Boolean`, `Byte`
  * Primitive type arrays: `boolean[]`, `byte[]`, `char[]`, `double[]`, `float[]`, `int[]`, `long[]`
  * List type of any object (**Warning: validation is not performed**)
 
