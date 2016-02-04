@@ -21,61 +21,106 @@ import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiModifier;
-import com.intellij.psi.search.SearchScope;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.ToolbarDecorator;
+import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBList;
+import com.intellij.ui.components.panels.VerticalBox;
 import org.jetbrains.annotations.Nullable;
 
-import javax.lang.model.element.Modifier;
 import javax.swing.*;
-import java.util.Arrays;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GenerateDialog extends DialogWrapper {
 
-    private final LabeledComponent<JPanel> myComponent;
-    private CollectionListModel<PsiField> myFields;
+    private final CollectionListModel<PsiField> fieldsCollection;
+    private final LabeledComponent<JPanel> fieldsComponent;
+    private final JBCheckBox includeSubclasses;
+    private final boolean showCheckbox;
 
-    protected GenerateDialog(PsiClass psiClass) {
+    protected GenerateDialog(final PsiClass psiClass) {
         super(psiClass.getProject());
         setTitle("Select Fields for Parcelable Generation");
 
-        PsiField[] allFields = psiClass.getFields();
-        PsiField[] fields = new PsiField[allFields.length];
+        fieldsCollection = new CollectionListModel<>();
+        final JBList fieldList = new JBList(fieldsCollection);
+        fieldList.setCellRenderer(new DefaultPsiElementCellRenderer());
+        final ToolbarDecorator decorator = ToolbarDecorator.createDecorator(fieldList).disableAddAction();
+        final JPanel panel = decorator.createPanel();
 
-        int i = 0;
+        fieldsComponent = LabeledComponent.create(panel, "Fields to include in Parcelable");
 
+        includeSubclasses = new JBCheckBox("Include fields from subclasses");
+        setupCheckboxClickAction(psiClass);
+        showCheckbox = psiClass.getFields().length != psiClass.getAllFields().length;
+
+        updateFieldsDisplay(psiClass);
+        init();
+    }
+
+    /**
+     * Hookup action listener for {@link #includeSubclasses} checkbox.
+     */
+    private void setupCheckboxClickAction(final PsiClass psiClass) {
+        includeSubclasses.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                updateFieldsDisplay(psiClass);
+            }
+        });
+    }
+
+    /**
+     * Update {@link #fieldsCollection} with class fields.
+     */
+    private void updateFieldsDisplay(PsiClass psiClass) {
+        final List<PsiField> fields;
+        if (includeSubclasses.isSelected()) {
+            fields = getClassFields(psiClass.getAllFields());
+        } else {
+            fields = getClassFields(psiClass.getFields());
+        }
+        fieldsCollection.removeAll();
+        fieldsCollection.add(fields);
+    }
+
+    /**
+     * Exclude static fields.
+     */
+    private List<PsiField> getClassFields(PsiField[] allFields) {
+        final List<PsiField> fields = new ArrayList<>();
         for (PsiField field : allFields) {
-            // Exclude static fields
             if (!field.hasModifierProperty(PsiModifier.STATIC)) {
-                fields[i++] = field;
+                fields.add(field);
             }
         }
-
-        // i is post-incremented, so no need to add 1 for the count
-        fields = Arrays.copyOfRange(fields, 0, i);
-
-        myFields = new CollectionListModel<PsiField>(fields);
-
-        JBList fieldList = new JBList(myFields);
-        fieldList.setCellRenderer(new DefaultPsiElementCellRenderer());
-        ToolbarDecorator decorator = ToolbarDecorator.createDecorator(fieldList);
-        decorator.disableAddAction();
-        JPanel panel = decorator.createPanel();
-
-        myComponent = LabeledComponent.create(panel, "Fields to include in Parcelable");
-
-        init();
+        return fields;
     }
 
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        return myComponent;
+        return fieldsComponent;
+    }
+
+    @Nullable
+    @Override
+    protected JComponent createSouthPanel() {
+        JComponent southPanel = super.createSouthPanel();
+        if(showCheckbox && southPanel != null) {
+            final VerticalBox combinedView = new VerticalBox();
+            combinedView.add(includeSubclasses);
+            combinedView.add(southPanel);
+            return combinedView;
+        } else {
+            return southPanel;
+        }
     }
 
     public List<PsiField> getSelectedFields() {
-        return myFields.getItems();
+        return fieldsCollection.getItems();
     }
 }
