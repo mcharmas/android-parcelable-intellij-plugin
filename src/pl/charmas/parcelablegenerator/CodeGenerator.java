@@ -45,6 +45,7 @@ public class CodeGenerator {
                 new EnumerationSerializerFactory(),
                 new PrimitiveTypeSerializerFactory(),
                 new PrimitiveArraySerializerFactory(),
+                new PrimitiveTypeArraySerializerFactory(),
                 new ParcelableSerializerFactory(),
                 new ListSerializerFactory(),
                 new SerializableSerializerFactory()

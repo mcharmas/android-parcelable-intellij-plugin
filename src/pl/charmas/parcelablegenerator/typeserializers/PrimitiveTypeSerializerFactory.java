@@ -34,6 +34,16 @@ public class PrimitiveTypeSerializerFactory implements TypeSerializerFactory {
     }
 
     private void initNullablePrimitives() {
+        writeMethodsForTypes.put("java.lang.Byte", new NullablePrimitivesSerializer("java.lang.Byte"));
+        writeMethodsForTypes.put("java.lang.Double", new NullablePrimitivesSerializer("java.lang.Double"));
+        writeMethodsForTypes.put("java.lang.Float", new NullablePrimitivesSerializer("java.lang.Float"));
+        writeMethodsForTypes.put("java.lang.Integer", new NullablePrimitivesSerializer("java.lang.Integer"));
+        writeMethodsForTypes.put("java.lang.Long", new NullablePrimitivesSerializer("java.lang.Long"));
+        writeMethodsForTypes.put("java.lang.Boolean", new NullablePrimitivesSerializer("java.lang.Boolean"));
+        writeMethodsForTypes.put("java.lang.Char", new NullablePrimitivesSerializer("java.lang.Char"));
+    }
+
+    private void initPrimitives() {
         writeMethodsForTypes.put("byte", new PrimitiveTypeSerializer("Byte"));
         writeMethodsForTypes.put("double", new PrimitiveTypeSerializer("Double"));
         writeMethodsForTypes.put("float", new PrimitiveTypeSerializer("Float"));
@@ -42,16 +52,6 @@ public class PrimitiveTypeSerializerFactory implements TypeSerializerFactory {
         writeMethodsForTypes.put("java.lang.String", new PrimitiveTypeSerializer("String"));
         writeMethodsForTypes.put("boolean", new BooleanPrimitiveSerializer());
         writeMethodsForTypes.put("char", new CharPrimitiveSerializer());
-    }
-
-    private void initPrimitives() {
-        writeMethodsForTypes.put("java.lang.Byte", new NullablePrimitivesSerializer("java.lang.Byte"));
-        writeMethodsForTypes.put("java.lang.Double", new NullablePrimitivesSerializer("java.lang.Double"));
-        writeMethodsForTypes.put("java.lang.Float", new NullablePrimitivesSerializer("java.lang.Float"));
-        writeMethodsForTypes.put("java.lang.Integer", new NullablePrimitivesSerializer("java.lang.Integer"));
-        writeMethodsForTypes.put("java.lang.Long", new NullablePrimitivesSerializer("java.lang.Long"));
-        writeMethodsForTypes.put("java.lang.Boolean", new NullablePrimitivesSerializer("java.lang.Boolean"));
-        writeMethodsForTypes.put("java.lang.Char", new NullablePrimitivesSerializer("java.lang.Char"));
     }
 
     @Override

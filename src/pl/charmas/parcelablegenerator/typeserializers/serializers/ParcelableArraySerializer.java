@@ -6,11 +6,11 @@ import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
 public class ParcelableArraySerializer implements TypeSerializer {
     @Override
     public String writeValue(PsiField field, String parcel, String flags) {
-        return parcel + ".writeParcelableArray(this." + field.getName() + ", 0);";
+        return parcel + ".writeTypedArray(this." + field.getName() + ", flags);";
     }
 
     @Override
     public String readValue(PsiField field, String parcel) {
-        return "this." + field.getName() + " = (" + field.getType().getCanonicalText() + ")" + parcel + ".readParcelableArray(" + field.getType().getDeepComponentType().getCanonicalText() + ".class.getClassLoader());";
+        return "this." + field.getName() + " = " + parcel + ".createTypedArray(" + field.getType().getDeepComponentType().getCanonicalText() + ".CREATOR);";
     }
 }
