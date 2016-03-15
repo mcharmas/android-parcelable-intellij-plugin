@@ -39,7 +39,8 @@ final public class PsiUtils {
             return true;
         }
 
-        if (getNonGenericType(type).equals(canonicalName)) {
+        String nonGenericType = getNonGenericType(type);
+        if (nonGenericType != null && nonGenericType.equals(canonicalName)) {
             return true;
         }
 
@@ -55,7 +56,8 @@ final public class PsiUtils {
     public static String getNonGenericType(PsiType type) {
         if (type instanceof PsiClassType) {
             PsiClassType pct = (PsiClassType) type;
-            return pct.resolve().getQualifiedName();
+            PsiClass psiClass = pct.resolve();
+            return psiClass != null ? psiClass.getQualifiedName() : null;
         }
 
         return type.getCanonicalText();
