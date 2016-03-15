@@ -58,8 +58,10 @@ public class CodeGenerator {
         String className = psiClass.getName();
 
         sb.append(className).append("> CREATOR = new android.os.Parcelable.Creator<").append(className).append(">(){")
+                .append("@Override ")
                 .append("public ").append(className).append(" createFromParcel(android.os.Parcel source) {")
                 .append("return new ").append(className).append("(source);}")
+                .append("@Override ")
                 .append("public ").append(className).append("[] newArray(int size) {")
                 .append("return new ").append(className).append("[size];}")
                 .append("};");
