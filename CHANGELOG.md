@@ -1,5 +1,13 @@
 # Change Log
 
+##Version 0.6.3
+
+* Now generating parcelable also for base cass fields
+* Fixed primitive type arrays serialisation
+* Added @Override annotation on Creator methods
+* Added short support
+* Minor bugfixes
+
 ##Version 0.6.2
 
 * Fixed list serialization
