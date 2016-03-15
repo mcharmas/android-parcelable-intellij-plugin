@@ -53,7 +53,7 @@ public class GenerateDialog extends DialogWrapper {
 
         fieldsComponent = LabeledComponent.create(panel, "Fields to include in Parcelable");
 
-        includeSubclasses = new JBCheckBox("Include fields from subclasses");
+        includeSubclasses = new JBCheckBox("Include fields from base classes");
         setupCheckboxClickAction(psiClass);
         showCheckbox = psiClass.getFields().length != psiClass.getAllFields().length;
 
