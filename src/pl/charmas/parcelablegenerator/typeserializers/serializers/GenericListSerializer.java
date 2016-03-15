@@ -47,7 +47,7 @@ public class GenericListSerializer implements TypeSerializer {
                     : "new java.util.ArrayList();";
 
             statement.append("this.").append(field.getName()).append(" = ").append(listConstructor);
-            statement.append(parcel).append(".readList(this.").append(field.getName()).append(", List.class.getClassLoader());");
+            statement.append(parcel).append(".readList(this.").append(field.getName()).append(", ").append(genericType).append(".class.getClassLoader());");
         }
 
         return statement.toString();
