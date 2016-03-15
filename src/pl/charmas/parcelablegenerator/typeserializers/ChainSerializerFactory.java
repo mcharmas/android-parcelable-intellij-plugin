@@ -16,7 +16,7 @@
 package pl.charmas.parcelablegenerator.typeserializers;
 
 import com.intellij.psi.PsiType;
-import pl.charmas.parcelablegenerator.typeserializers.serializers.UnknownTypeSerializer;
+import pl.charmas.parcelablegenerator.typeserializers.serializers.ParcelableObjectSerializer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,6 +37,6 @@ public class ChainSerializerFactory implements TypeSerializerFactory {
                 return serializer;
             }
         }
-        return new UnknownTypeSerializer(psiType.getCanonicalText());
+        return new ParcelableObjectSerializer();
     }
 }
