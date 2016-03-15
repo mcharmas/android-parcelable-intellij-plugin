@@ -45,7 +45,7 @@ public class GenerateDialog extends DialogWrapper {
         super(psiClass.getProject());
         setTitle("Select Fields for Parcelable Generation");
 
-        fieldsCollection = new CollectionListModel<>();
+        fieldsCollection = new CollectionListModel<PsiField>();
         final JBList fieldList = new JBList(fieldsCollection);
         fieldList.setCellRenderer(new DefaultPsiElementCellRenderer());
         final ToolbarDecorator decorator = ToolbarDecorator.createDecorator(fieldList).disableAddAction();
@@ -91,7 +91,7 @@ public class GenerateDialog extends DialogWrapper {
      * Exclude static fields.
      */
     private List<PsiField> getClassFields(PsiField[] allFields) {
-        final List<PsiField> fields = new ArrayList<>();
+        final List<PsiField> fields = new ArrayList<PsiField>();
         for (PsiField field : allFields) {
             if (!field.hasModifierProperty(PsiModifier.STATIC)) {
                 fields.add(field);
