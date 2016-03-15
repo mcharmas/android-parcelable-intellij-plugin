@@ -8,7 +8,7 @@ public class ShortPrimitiveSerializer implements TypeSerializer {
 
     @Override
     public String writeValue(PsiField field, String parcel, String flags) {
-        return parcel + ".writeInt(" + field.getName() + ");";
+        return parcel + ".writeInt(this." + field.getName() + ");";
     }
 
     @Override
