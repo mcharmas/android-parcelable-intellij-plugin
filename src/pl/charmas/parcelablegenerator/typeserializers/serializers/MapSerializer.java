@@ -25,7 +25,7 @@ import pl.charmas.parcelablegenerator.util.PsiUtils;
 
 public class MapSerializer implements TypeSerializer {
 
-    ListPrimitiveSerializer mListSerializer = new ListPrimitiveSerializer();
+    GenericListSerializer mListSerializer = new GenericListSerializer();
 
     @Override
     public String writeValue(PsiField field, String parcel, String flags) {
@@ -43,8 +43,8 @@ public class MapSerializer implements TypeSerializer {
                        keysVarName + ".addAll(this." + fieldName + ".keySet());" +
                        "java.util.ArrayList<" + valueGenericType + "> " + valuesVarName + " = new java.util.ArrayList();" +
                        valuesVarName + ".addAll(this." + fieldName + ".values());" +
-                       mListSerializer.writeValue(parcel, keysVarName) +
-                       mListSerializer.writeValue(parcel, valuesVarName);
+                       mListSerializer.writeValue(parcel, keyGenericType, keysVarName) +
+                       mListSerializer.writeValue(parcel, valueGenericType, valuesVarName);
     }
 
     @Override
@@ -61,8 +61,8 @@ public class MapSerializer implements TypeSerializer {
 
         return "java.util.ArrayList<" + keyGenericType + "> " + keysVarName + ";" +
                        "java.util.ArrayList<" + valueGenericType + "> " + valuesVarName + ";" +
-                       mListSerializer.readValue(keyGenericType, keysVarName) +
-                       mListSerializer.readValue(valueGenericType, valuesVarName)
+                       mListSerializer.readValue(parcel, keyGenericType, keysVarName) +
+                       mListSerializer.readValue(parcel, valueGenericType, valuesVarName)
                        + fieldName + " = new HashMap<" + keyGenericType + ", " + valueGenericType + ">();"
                        + "for (int i = 0; i < " + keysVarName + ".size(); i++) {"
                        + "    " + fieldName + ".put(" + keysVarName + ".get(i), " + valuesVarName + ".get(i));"

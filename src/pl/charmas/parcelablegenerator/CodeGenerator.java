@@ -26,9 +26,6 @@ import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiParameterList;
 import com.intellij.psi.PsiReferenceList;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-import com.intellij.psi.util.PsiUtil;
-import pl.charmas.parcelablegenerator.typeserializers.*;
-import pl.charmas.parcelablegenerator.util.PsiUtils;
 
 import java.util.List;
 
@@ -38,14 +35,15 @@ import pl.charmas.parcelablegenerator.typeserializers.DateSerializerFactory;
 import pl.charmas.parcelablegenerator.typeserializers.EnumerationSerializerFactory;
 import pl.charmas.parcelablegenerator.typeserializers.ListSerializerFactory;
 import pl.charmas.parcelablegenerator.typeserializers.MapSerializerFactory;
-import pl.charmas.parcelablegenerator.typeserializers.ParcelableListSerializerFactory;
 import pl.charmas.parcelablegenerator.typeserializers.ParcelableSerializerFactory;
 import pl.charmas.parcelablegenerator.typeserializers.PrimitiveArraySerializerFactory;
+import pl.charmas.parcelablegenerator.typeserializers.PrimitiveTypeArraySerializerFactory;
 import pl.charmas.parcelablegenerator.typeserializers.PrimitiveTypeSerializerFactory;
 import pl.charmas.parcelablegenerator.typeserializers.SerializableSerializerFactory;
 import pl.charmas.parcelablegenerator.typeserializers.SparseArraySerializerFactory;
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializerFactory;
+import pl.charmas.parcelablegenerator.util.PsiUtils;
 
 
 /**

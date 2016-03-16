@@ -16,15 +16,13 @@
 package pl.charmas.parcelablegenerator.typeserializers.serializers;
 
 import com.intellij.psi.PsiField;
+
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
 
 public class NullablePrimitivesArraySerializer implements TypeSerializer {
 
     private final String typeName;
 
-    private final TypeSerializer typeSerializer = new ParcelableObjectSerializer();
-
-    public UnknownTypeSerializer(String typeName) {
     public NullablePrimitivesArraySerializer(String typeName) {
         this.typeName = typeName;
     }

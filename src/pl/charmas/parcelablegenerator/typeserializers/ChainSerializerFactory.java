@@ -16,10 +16,11 @@
 package pl.charmas.parcelablegenerator.typeserializers;
 
 import com.intellij.psi.PsiType;
-import pl.charmas.parcelablegenerator.typeserializers.serializers.ParcelableObjectSerializer;
 
 import java.util.Arrays;
 import java.util.List;
+
+import pl.charmas.parcelablegenerator.typeserializers.serializers.ParcelableObjectSerializer;
 
 public class ChainSerializerFactory implements TypeSerializerFactory {
 

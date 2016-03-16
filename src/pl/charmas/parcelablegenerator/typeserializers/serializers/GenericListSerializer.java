@@ -18,39 +18,49 @@ package pl.charmas.parcelablegenerator.typeserializers.serializers;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
+
 import org.jetbrains.annotations.NotNull;
+
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
 
 public class GenericListSerializer implements TypeSerializer {
 
     public static final String STRING_TYPE_NAME = "java.lang.String";
 
-    @Override
-    public String writeValue(PsiField field, String parcel, String flags) {
+    public String writeValue(String parcel, String valueType, String valueVarName) {
         String method = "writeList";
-        if (getGenericType(field).equals(STRING_TYPE_NAME)) {
+        if (valueType.equals(STRING_TYPE_NAME)) {
             method = "writeStringList";
         }
-        return parcel + "." + method + "(this." + field.getName() + ");";
+        return parcel + "." + method + "(" + valueVarName + ");";
+    }
+
+    public String readValue(String parcel, String valueType, String valueVarName) {
+        StringBuilder statement = new StringBuilder();
+        if (valueType.equals(STRING_TYPE_NAME)) {
+            statement.append("this.").append(valueVarName).append("=").append(parcel).append(".createStringArrayList();");
+        } else {
+            String listConstructor = !valueType.isEmpty()
+                    ? "new java.util.ArrayList<" + valueType + ">();"
+                    : "new java.util.ArrayList();";
+
+            statement.append(valueVarName).append(" = ").append(listConstructor);
+            statement.append(parcel).append(".readList(").append(valueVarName).append(", ").append(valueType).append(".class.getClassLoader());");
+        }
+
+        return statement.toString();
+    }
+
+    @Override
+    public String writeValue(PsiField field, String parcel, String flags) {
+        return writeValue(parcel, getGenericType(field), "this." + field.getName());
     }
 
     @Override
     public String readValue(PsiField field, String parcel) {
-        String genericType = getGenericType(field);
-
-        StringBuilder statement = new StringBuilder();
-        if (genericType.equals(STRING_TYPE_NAME)) {
-            statement.append("this.").append(field.getName()).append("=").append(parcel).append(".createStringArrayList();");
-        } else {
-            String listConstructor = !genericType.isEmpty()
-                    ? "new java.util.ArrayList<" + genericType + ">();"
-                    : "new java.util.ArrayList();";
-
-            statement.append("this.").append(field.getName()).append(" = ").append(listConstructor);
-            statement.append(parcel).append(".readList(this.").append(field.getName()).append(", ").append(genericType).append(".class.getClassLoader());");
-        }
-
-        return statement.toString();
+        final String valueType = getGenericType(field);
+        final String valueVarName = "this." + field.getName();
+        return readValue(parcel, valueType, valueVarName);
     }
 
     @NotNull

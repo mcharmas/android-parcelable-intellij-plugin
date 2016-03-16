@@ -16,7 +16,9 @@
 package pl.charmas.parcelablegenerator.typeserializers.serializers;
 
 import com.intellij.psi.PsiField;
+
 import org.apache.xmlbeans.impl.common.NameUtil;
+
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
 
 /**
