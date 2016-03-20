@@ -38,7 +38,7 @@ public class GenericListSerializer implements TypeSerializer {
     public String readValue(String parcel, String valueType, String valueVarName) {
         StringBuilder statement = new StringBuilder();
         if (valueType.equals(STRING_TYPE_NAME)) {
-            statement.append("this.").append(valueVarName).append("=").append(parcel).append(".createStringArrayList();");
+            statement.append(valueVarName).append("=").append(parcel).append(".createStringArrayList();");
         } else {
             String listConstructor = !valueType.isEmpty()
                     ? "new java.util.ArrayList<" + valueType + ">();"
