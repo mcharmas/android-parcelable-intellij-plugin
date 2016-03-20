@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Michał Charmas (http://blog.charmas.pl)
+ * Copyright (C) 2014 Dallas Gutauckis (http://dallasgutauckis.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,22 +18,17 @@ package pl.charmas.parcelablegenerator.typeserializers.serializers;
 import com.intellij.psi.PsiField;
 
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
+import pl.charmas.parcelablegenerator.util.PsiUtils;
 
-public class PrimitiveArraySerializer implements TypeSerializer {
-
-    private final String type;
-
-    public PrimitiveArraySerializer(String type) {
-        this.type = type;
-    }
-
+public class SparseArraySerializer implements TypeSerializer {
     @Override
     public String writeValue(PsiField field, String parcel, String flags) {
-        return parcel + ".write" + type + "Array(this." + field.getName() + ");";
+        return String.format("%s.writeValue(%s);", parcel, field.getName());
     }
 
     @Override
     public String readValue(PsiField field, String parcel) {
-        return "this." + field.getName() + " = " + parcel + ".create" + type + "Array();";
+        String paramType = PsiUtils.getResolvedGenerics(field.getType()).get(0).getCanonicalText();
+        return String.format("%s.readValue(%s.class.getClassLoader());", parcel, paramType);
     }
 }

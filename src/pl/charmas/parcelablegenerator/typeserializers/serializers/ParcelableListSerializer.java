@@ -1,6 +1,7 @@
 package pl.charmas.parcelablegenerator.typeserializers.serializers;
 
 import com.intellij.psi.PsiField;
+
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
 import pl.charmas.parcelablegenerator.util.PsiUtils;
 

@@ -16,10 +16,11 @@
 package pl.charmas.parcelablegenerator.typeserializers;
 
 import com.intellij.psi.PsiType;
-import pl.charmas.parcelablegenerator.typeserializers.serializers.BooleanSparseArraySerializer;
-import pl.charmas.parcelablegenerator.typeserializers.serializers.PrimitiveArraySerializer;
 
 import java.util.HashMap;
+
+import pl.charmas.parcelablegenerator.typeserializers.serializers.BooleanSparseArraySerializer;
+import pl.charmas.parcelablegenerator.typeserializers.serializers.PrimitiveArraySerializer;
 
 public class PrimitiveArraySerializerFactory implements TypeSerializerFactory {
     private final HashMap<String, TypeSerializer> handledTypes;
