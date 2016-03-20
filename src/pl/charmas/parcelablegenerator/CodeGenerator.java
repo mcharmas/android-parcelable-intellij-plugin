@@ -83,7 +83,7 @@ public class CodeGenerator {
 
         // Creates all of the deserialization methods for the given fields
         for (PsiField field : fields) {
-            sb.append(getSerializerForType(field).readValue(new SerializableValue.MemberSerializableValue(field), "in"));
+            sb.append(getSerializerForType(field).readValue(SerializableValue.member(field), "in"));
         }
 
         sb.append("}");
@@ -108,7 +108,7 @@ public class CodeGenerator {
             sb.append("super.writeToParcel(dest, flags);");
         }
         for (PsiField field : fields) {
-            sb.append(getSerializerForType(field).writeValue(new SerializableValue.MemberSerializableValue(field), "dest", "flags"));
+            sb.append(getSerializerForType(field).writeValue(SerializableValue.member(field), "dest", "flags"));
         }
 
         sb.append("}");

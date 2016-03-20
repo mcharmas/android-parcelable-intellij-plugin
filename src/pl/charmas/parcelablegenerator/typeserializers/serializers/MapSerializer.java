@@ -17,8 +17,6 @@ package pl.charmas.parcelablegenerator.typeserializers.serializers;
 
 import com.intellij.psi.PsiType;
 import pl.charmas.parcelablegenerator.typeserializers.SerializableValue;
-import pl.charmas.parcelablegenerator.typeserializers.SerializableValue.StatementSerializableValue;
-import pl.charmas.parcelablegenerator.typeserializers.SerializableValue.VariableSerializableValue;
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializerFactory;
 import pl.charmas.parcelablegenerator.util.PsiUtils;
@@ -47,11 +45,11 @@ public class MapSerializer implements TypeSerializer {
                 .append(String.format("for(Map.Entry<%s,%s> entry : %s.entrySet()) {", keyType.getCanonicalText(), valueType.getCanonicalText(), field.getName()))
                 .append(typeSerializerFactory
                         .getSerializer(keyType)
-                        .writeValue(new StatementSerializableValue("entry.getKey()", keyType), parcel, flags)
+                        .writeValue(SerializableValue.statement("entry.getKey()", keyType), parcel, flags)
                 )
                 .append(typeSerializerFactory
                         .getSerializer(valueType)
-                        .writeValue(new StatementSerializableValue("entry.getValue()", valueType), parcel, flags)
+                        .writeValue(SerializableValue.statement("entry.getValue()", valueType), parcel, flags)
                 )
                 .append("}")
                 .toString();
@@ -63,14 +61,13 @@ public class MapSerializer implements TypeSerializer {
         PsiType keyType = resolvedGenerics.get(1);
         PsiType valueType = resolvedGenerics.get(0);
 
-        String sizeVariableName = (field.getName() + "Size").replace("this.", "");
+        String sizeVariableName = field.getSimpleName() + "Size";
         return new StringBuilder()
-                .append(field.getName())
-                .append(String.format(" = new java.util.HashMap<%s, %s>();", keyType.getCanonicalText(), valueType.getCanonicalText()))
                 .append(String.format("int %s = %s.readInt();", sizeVariableName, parcel))
+                .append(field.getName()).append(String.format(" = new java.util.HashMap<%s, %s>(%s);", keyType.getCanonicalText(), valueType.getCanonicalText(), sizeVariableName))
                 .append(String.format("for(int i = 0; i < %s; i++) {", sizeVariableName))
-                .append(typeSerializerFactory.getSerializer(keyType).readValue(new VariableSerializableValue("key", keyType), parcel))
-                .append(typeSerializerFactory.getSerializer(valueType).readValue(new VariableSerializableValue("value", valueType), parcel))
+                .append(typeSerializerFactory.getSerializer(keyType).readValue(SerializableValue.variable("key", keyType), parcel))
+                .append(typeSerializerFactory.getSerializer(valueType).readValue(SerializableValue.variable("value", valueType), parcel))
                 .append(field.getName()).append(".put(key, value);")
                 .append("}")
                 .toString();

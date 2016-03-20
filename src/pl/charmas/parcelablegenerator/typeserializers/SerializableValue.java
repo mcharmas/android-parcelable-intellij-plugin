@@ -3,12 +3,26 @@ package pl.charmas.parcelablegenerator.typeserializers;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiType;
 
-public interface SerializableValue {
-    PsiType getType();
+public abstract class SerializableValue {
+    public abstract PsiType getType();
 
-    String getName();
+    public abstract String getName();
 
-    class MemberSerializableValue implements SerializableValue {
+    public static SerializableValue member(PsiField field) {
+        return new MemberSerializableValue(field);
+    }
+
+    public static SerializableValue statement(String statement, PsiType type) {
+        return new StatementSerializableValue(statement, type);
+    }
+
+    public static SerializableValue variable(String name, PsiType type) {
+        return new VariableSerializableValue(name, type);
+    }
+
+    public abstract String getSimpleName();
+
+    private static class MemberSerializableValue extends SerializableValue {
         private final PsiField field;
 
         public MemberSerializableValue(PsiField field) {
@@ -24,9 +38,14 @@ public interface SerializableValue {
         public String getName() {
             return "this." + field.getName();
         }
+
+        @Override
+        public String getSimpleName() {
+            return field.getName();
+        }
     }
 
-    class StatementSerializableValue implements SerializableValue {
+    private static class StatementSerializableValue extends SerializableValue {
         private final String statement;
         private final PsiType type;
 
@@ -44,9 +63,14 @@ public interface SerializableValue {
         public String getName() {
             return statement;
         }
+
+        @Override
+        public String getSimpleName() {
+            return statement;
+        }
     }
 
-    class VariableSerializableValue implements SerializableValue {
+    private static class VariableSerializableValue extends SerializableValue {
         private final String variableName;
         private final PsiType type;
 
@@ -63,6 +87,11 @@ public interface SerializableValue {
         @Override
         public String getName() {
             return type.getCanonicalText() + " " + variableName;
+        }
+
+        @Override
+        public String getSimpleName() {
+            return variableName;
         }
     }
 }
