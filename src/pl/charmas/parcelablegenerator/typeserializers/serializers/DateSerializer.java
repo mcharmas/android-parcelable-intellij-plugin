@@ -15,10 +15,9 @@
  */
 package pl.charmas.parcelablegenerator.typeserializers.serializers;
 
-import com.intellij.psi.PsiField;
-
 import org.apache.xmlbeans.impl.common.NameUtil;
 
+import pl.charmas.parcelablegenerator.typeserializers.SerializableValue;
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
 
 /**
@@ -31,17 +30,16 @@ public class DateSerializer implements TypeSerializer {
     private static final String NULL_VALUE = "-1";
 
     @Override
-    public String writeValue(PsiField field, String parcel, String flags) {
+    public String writeValue(SerializableValue field, String parcel, String flags) {
         String fieldName = field.getName();
         return String.format("%s.writeLong(%s != null ? %s.getTime() : %s);", parcel, fieldName, fieldName, NULL_VALUE);
     }
 
     @Override
-    public String readValue(PsiField field, String parcel) {
+    public String readValue(SerializableValue field, String parcel) {
         String fieldName = field.getName();
         String tmpFieldName = NameUtil.upperCaseFirstLetter(fieldName);
-        String formatted = String.format("long tmp%s = %s.readLong(); " +
-                "this.%s = tmp%s == %s ? null : new java.util.Date(tmp%s);", tmpFieldName, parcel, fieldName, tmpFieldName, NULL_VALUE, tmpFieldName);
-        return formatted;
+        return String.format("long tmp%s = %s.readLong(); " +
+                "%s = tmp%s == %s ? null : new java.util.Date(tmp%s);", tmpFieldName, parcel, fieldName, tmpFieldName, NULL_VALUE, tmpFieldName);
     }
 }

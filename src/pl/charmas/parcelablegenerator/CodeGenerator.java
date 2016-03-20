@@ -29,20 +29,7 @@ import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 
 import java.util.List;
 
-import pl.charmas.parcelablegenerator.typeserializers.BundleSerializerFactory;
-import pl.charmas.parcelablegenerator.typeserializers.ChainSerializerFactory;
-import pl.charmas.parcelablegenerator.typeserializers.DateSerializerFactory;
-import pl.charmas.parcelablegenerator.typeserializers.EnumerationSerializerFactory;
-import pl.charmas.parcelablegenerator.typeserializers.ListSerializerFactory;
-import pl.charmas.parcelablegenerator.typeserializers.MapSerializerFactory;
-import pl.charmas.parcelablegenerator.typeserializers.ParcelableSerializerFactory;
-import pl.charmas.parcelablegenerator.typeserializers.PrimitiveArraySerializerFactory;
-import pl.charmas.parcelablegenerator.typeserializers.PrimitiveTypeArraySerializerFactory;
-import pl.charmas.parcelablegenerator.typeserializers.PrimitiveTypeSerializerFactory;
-import pl.charmas.parcelablegenerator.typeserializers.SerializableSerializerFactory;
-import pl.charmas.parcelablegenerator.typeserializers.SparseArraySerializerFactory;
-import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
-import pl.charmas.parcelablegenerator.typeserializers.TypeSerializerFactory;
+import pl.charmas.parcelablegenerator.typeserializers.*;
 import pl.charmas.parcelablegenerator.util.PsiUtils;
 
 
@@ -106,7 +93,7 @@ public class CodeGenerator {
 
         // Creates all of the deserialization methods for the given fields
         for (PsiField field : fields) {
-            sb.append(getSerializerForType(field).readValue(field, "in"));
+            sb.append(getSerializerForType(field).readValue(new SerializableValue.MemberSerializableValue(field), "in"));
         }
 
         sb.append("}");
@@ -131,7 +118,7 @@ public class CodeGenerator {
             sb.append("super.writeToParcel(dest, flags);");
         }
         for (PsiField field : fields) {
-            sb.append(getSerializerForType(field).writeValue(field, "dest", "flags"));
+            sb.append(getSerializerForType(field).writeValue(new SerializableValue.MemberSerializableValue(field), "dest", "flags"));
         }
 
         sb.append("}");

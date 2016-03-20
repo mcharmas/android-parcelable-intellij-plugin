@@ -21,7 +21,7 @@ import pl.charmas.parcelablegenerator.typeserializers.serializers.MapSerializer;
 import pl.charmas.parcelablegenerator.util.PsiUtils;
 
 public class MapSerializerFactory implements TypeSerializerFactory {
-    private TypeSerializer mSerializer = new MapSerializer();
+    private TypeSerializer mSerializer = new MapSerializer(null);
 
     @Override
     public TypeSerializer getSerializer(PsiType psiType) {

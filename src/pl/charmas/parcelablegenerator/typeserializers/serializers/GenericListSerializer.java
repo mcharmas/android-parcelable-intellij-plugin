@@ -15,12 +15,12 @@
  */
 package pl.charmas.parcelablegenerator.typeserializers.serializers;
 
-import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 
 import org.jetbrains.annotations.NotNull;
 
+import pl.charmas.parcelablegenerator.typeserializers.SerializableValue;
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
 
 public class GenericListSerializer implements TypeSerializer {
@@ -52,19 +52,19 @@ public class GenericListSerializer implements TypeSerializer {
     }
 
     @Override
-    public String writeValue(PsiField field, String parcel, String flags) {
-        return writeValue(parcel, getGenericType(field), "this." + field.getName());
+    public String writeValue(SerializableValue field, String parcel, String flags) {
+        return writeValue(parcel, getGenericType(field), field.getName());
     }
 
     @Override
-    public String readValue(PsiField field, String parcel) {
+    public String readValue(SerializableValue field, String parcel) {
         final String valueType = getGenericType(field);
-        final String valueVarName = "this." + field.getName();
+        final String valueVarName = field.getName();
         return readValue(parcel, valueType, valueVarName);
     }
 
     @NotNull
-    private String getGenericType(PsiField field) {
+    private String getGenericType(SerializableValue field) {
         String genericType = "";
         try {
             PsiType[] parameters = ((PsiClassReferenceType) field.getType()).getParameters();
