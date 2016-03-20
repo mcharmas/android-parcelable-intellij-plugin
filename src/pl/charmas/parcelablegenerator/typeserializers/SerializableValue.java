@@ -25,4 +25,44 @@ public interface SerializableValue {
             return "this." + field.getName();
         }
     }
+
+    class StatementSerializableValue implements SerializableValue {
+        private final String statement;
+        private final PsiType type;
+
+        public StatementSerializableValue(String statement, PsiType type) {
+            this.statement = statement;
+            this.type = type;
+        }
+
+        @Override
+        public PsiType getType() {
+            return type;
+        }
+
+        @Override
+        public String getName() {
+            return statement;
+        }
+    }
+
+    class VariableSerializableValue implements SerializableValue {
+        private final String variableName;
+        private final PsiType type;
+
+        public VariableSerializableValue(String variableName, PsiType type) {
+            this.variableName = variableName;
+            this.type = type;
+        }
+
+        @Override
+        public PsiType getType() {
+            return type;
+        }
+
+        @Override
+        public String getName() {
+            return type.getCanonicalText() + " " + variableName;
+        }
+    }
 }

@@ -16,17 +16,20 @@
 package pl.charmas.parcelablegenerator.typeserializers;
 
 import com.intellij.psi.PsiType;
-
 import pl.charmas.parcelablegenerator.typeserializers.serializers.MapSerializer;
 import pl.charmas.parcelablegenerator.util.PsiUtils;
 
 public class MapSerializerFactory implements TypeSerializerFactory {
-    private TypeSerializer mSerializer = new MapSerializer(null);
+    private final TypeSerializer serializer;
+
+    public MapSerializerFactory(TypeSerializerFactory typeSerializers) {
+        this.serializer = new MapSerializer(typeSerializers);
+    }
 
     @Override
     public TypeSerializer getSerializer(PsiType psiType) {
         if (PsiUtils.isOfType(psiType, "java.util.Map")) {
-            return mSerializer;
+            return serializer;
         }
 
         return null;

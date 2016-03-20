@@ -15,10 +15,17 @@
  */
 package pl.charmas.parcelablegenerator.typeserializers.serializers;
 
+import com.intellij.psi.PsiType;
 import pl.charmas.parcelablegenerator.typeserializers.SerializableValue;
+import pl.charmas.parcelablegenerator.typeserializers.SerializableValue.StatementSerializableValue;
+import pl.charmas.parcelablegenerator.typeserializers.SerializableValue.VariableSerializableValue;
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializerFactory;
+import pl.charmas.parcelablegenerator.util.PsiUtils;
 
+import java.util.List;
+
+@SuppressWarnings("StringBufferReplaceableByString")
 public class MapSerializer implements TypeSerializer {
     private final TypeSerializerFactory typeSerializerFactory;
 
@@ -29,44 +36,43 @@ public class MapSerializer implements TypeSerializer {
 
     @Override
     public String writeValue(SerializableValue field, String parcel, String flags) {
-//        final List<PsiType> resolvedGenerics = PsiUtils.getResolvedGenerics(field.getType());
-//
-//        // Assumes a Map never has more than two generic types — also this is completely anecdotal as I found that the 0th item is the last generic
-//        PsiType keyGenericType = resolvedGenerics.get(1);
-//        PsiType valueGenericType = resolvedGenerics.get(0);
-//
-//        final String fieldName = field.getName();
-//
-//        StringBuilder statement = new StringBuilder();
-//        statement.append(parcel).append(".writeInt(").append(fieldName).append(".size());");
-//        statement.append(String.format("for(Map.Entry<%s,%s>) entry : field.entrySet()) {", keyGenericType, valueGenericType));
-//
-//        statement.append(typeSerializerFactory.getSerializer(keyGenericType).writeValue())
-//
-//
-//        return statement.toString();
-////        return "java.util.ArrayList<" + keyGenericType + "> " + keysVarName + " = new java.util.ArrayList();" +
-////                keysVarName + ".addAll(this." + fieldName + ".keySet());" +
-////                "java.util.ArrayList<" + valueGenericType + "> " + valuesVarName + " = new java.util.ArrayList();" +
-////                valuesVarName + ".addAll(this." + fieldName + ".values());" +
-////                mListSerializer.writeValue(parcel, keyGenericType, keysVarName) +
-////                mListSerializer.writeValue(parcel, valueGenericType, valuesVarName);
-        return null;
+        final List<PsiType> resolvedGenerics = PsiUtils.getResolvedGenerics(field.getType());
+        PsiType keyType = resolvedGenerics.get(1);
+        PsiType valueType = resolvedGenerics.get(0);
+
+        final String fieldName = field.getName();
+
+        return new StringBuilder()
+                .append(parcel).append(".writeInt(").append(fieldName).append(".size());")
+                .append(String.format("for(Map.Entry<%s,%s> entry : %s.entrySet()) {", keyType.getCanonicalText(), valueType.getCanonicalText(), field.getName()))
+                .append(typeSerializerFactory
+                        .getSerializer(keyType)
+                        .writeValue(new StatementSerializableValue("entry.getKey()", keyType), parcel, flags)
+                )
+                .append(typeSerializerFactory
+                        .getSerializer(valueType)
+                        .writeValue(new StatementSerializableValue("entry.getValue()", valueType), parcel, flags)
+                )
+                .append("}")
+                .toString();
     }
 
     @Override
     public String readValue(SerializableValue field, String parcel) {
-//        final List<PsiType> resolvedGenerics = PsiUtils.getResolvedGenerics(field.getType());
-//
-//        // Assumes a Map never has more than two generic types — also this is completely anecdotal as I found that the 0th item is the last generic
-//        String keyGenericType = resolvedGenerics.get(1).getCanonicalText();
-//        String valueGenericType = resolvedGenerics.get(0).getCanonicalText();
-//
-//        final String fieldName = field.getName();
-//        final String keysVarName = fieldName + "Keys";
-//        final String valuesVarName = fieldName + "Values";
-//
-//        return "";
-        return null;
+        final List<PsiType> resolvedGenerics = PsiUtils.getResolvedGenerics(field.getType());
+        PsiType keyType = resolvedGenerics.get(1);
+        PsiType valueType = resolvedGenerics.get(0);
+
+        String sizeVariableName = (field.getName() + "Size").replace("this.", "");
+        return new StringBuilder()
+                .append(field.getName())
+                .append(String.format(" = new java.util.HashMap<%s, %s>();", keyType.getCanonicalText(), valueType.getCanonicalText()))
+                .append(String.format("int %s = %s.readInt();", sizeVariableName, parcel))
+                .append(String.format("for(int i = 0; i < %s; i++) {", sizeVariableName))
+                .append(typeSerializerFactory.getSerializer(keyType).readValue(new VariableSerializableValue("key", keyType), parcel))
+                .append(typeSerializerFactory.getSerializer(valueType).readValue(new VariableSerializableValue("value", valueType), parcel))
+                .append(field.getName()).append(".put(key, value);")
+                .append("}")
+                .toString();
     }
 }

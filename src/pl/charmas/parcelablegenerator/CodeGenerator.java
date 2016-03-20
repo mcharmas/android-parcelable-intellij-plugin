@@ -15,22 +15,12 @@
  */
 package pl.charmas.parcelablegenerator;
 
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiClassType;
-import com.intellij.psi.PsiElementFactory;
-import com.intellij.psi.PsiField;
-import com.intellij.psi.PsiJavaCodeReferenceElement;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiParameter;
-import com.intellij.psi.PsiParameterList;
-import com.intellij.psi.PsiReferenceList;
+import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-
-import java.util.List;
-
 import pl.charmas.parcelablegenerator.typeserializers.*;
 import pl.charmas.parcelablegenerator.util.PsiUtils;
+
+import java.util.List;
 
 
 /**
@@ -48,7 +38,7 @@ public class CodeGenerator {
         mClass = psiClass;
         mFields = fields;
 
-        this.mTypeSerializerFactory = new ChainSerializerFactory(
+        ChainSerializerFactory baseChain = new ChainSerializerFactory(
                 new BundleSerializerFactory(),
                 new DateSerializerFactory(),
                 new EnumerationSerializerFactory(),
@@ -58,9 +48,9 @@ public class CodeGenerator {
                 new ParcelableSerializerFactory(),
                 new ListSerializerFactory(),
                 new SerializableSerializerFactory(),
-                new SparseArraySerializerFactory(),
-                new MapSerializerFactory()
+                new SparseArraySerializerFactory()
         );
+        this.mTypeSerializerFactory = baseChain.extend(new MapSerializerFactory(baseChain));
     }
 
     private String generateStaticCreator(PsiClass psiClass) {
