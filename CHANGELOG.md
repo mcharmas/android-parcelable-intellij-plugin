@@ -1,5 +1,12 @@
 # Change Log
 
+##Version 0.7.0
+
+* Added map parcelation
+* Parcelation is not generated for fields with transient modifier
+* Date parcelation fixes
+* Enum parcelation fixes
+
 ##Version 0.6.3
 
 * Now generating parcelable also for base cass fields
