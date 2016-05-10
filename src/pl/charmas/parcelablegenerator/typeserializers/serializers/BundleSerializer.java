@@ -15,7 +15,7 @@
  */
 package pl.charmas.parcelablegenerator.typeserializers.serializers;
 
-import com.intellij.psi.PsiField;
+import pl.charmas.parcelablegenerator.typeserializers.SerializableValue;
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
 
 /**
@@ -25,15 +25,13 @@ import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
  */
 public class BundleSerializer implements TypeSerializer {
 
-    private static final String NULL_VALUE = "-1";
-
     @Override
-    public String writeValue(PsiField field, String parcel, String flags) {
+    public String writeValue(SerializableValue field, String parcel, String flags) {
         return parcel + ".writeBundle(" + field.getName() + ");";
     }
 
     @Override
-    public String readValue(PsiField field, String parcel) {
+    public String readValue(SerializableValue field, String parcel) {
         return field.getName() + " = " + parcel + ".readBundle();";
     }
 }

@@ -16,14 +16,15 @@
 package pl.charmas.parcelablegenerator.typeserializers;
 
 import com.intellij.psi.PsiType;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import pl.charmas.parcelablegenerator.typeserializers.serializers.BooleanPrimitiveSerializer;
 import pl.charmas.parcelablegenerator.typeserializers.serializers.CharPrimitiveSerializer;
 import pl.charmas.parcelablegenerator.typeserializers.serializers.NullablePrimitivesSerializer;
 import pl.charmas.parcelablegenerator.typeserializers.serializers.PrimitiveTypeSerializer;
 import pl.charmas.parcelablegenerator.typeserializers.serializers.ShortPrimitiveSerializer;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class PrimitiveTypeSerializerFactory implements TypeSerializerFactory {
 

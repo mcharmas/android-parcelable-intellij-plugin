@@ -17,7 +17,6 @@ package pl.charmas.parcelablegenerator;
 
 import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
-import com.intellij.psi.util.PsiUtil;
 import pl.charmas.parcelablegenerator.typeserializers.*;
 import pl.charmas.parcelablegenerator.util.PsiUtils;
 
@@ -39,7 +38,7 @@ public class CodeGenerator {
         mClass = psiClass;
         mFields = fields;
 
-        this.mTypeSerializerFactory = new ChainSerializerFactory(
+        ChainSerializerFactory baseChain = new ChainSerializerFactory(
                 new BundleSerializerFactory(),
                 new DateSerializerFactory(),
                 new EnumerationSerializerFactory(),
@@ -48,8 +47,10 @@ public class CodeGenerator {
                 new PrimitiveTypeArraySerializerFactory(),
                 new ParcelableSerializerFactory(),
                 new ListSerializerFactory(),
-                new SerializableSerializerFactory()
+                new SerializableSerializerFactory(),
+                new SparseArraySerializerFactory()
         );
+        this.mTypeSerializerFactory = baseChain.extend(new MapSerializerFactory(baseChain));
     }
 
     private String generateStaticCreator(PsiClass psiClass) {
@@ -82,7 +83,7 @@ public class CodeGenerator {
 
         // Creates all of the deserialization methods for the given fields
         for (PsiField field : fields) {
-            sb.append(getSerializerForType(field).readValue(field, "in"));
+            sb.append(getSerializerForType(field).readValue(SerializableValue.member(field), "in"));
         }
 
         sb.append("}");
@@ -107,7 +108,7 @@ public class CodeGenerator {
             sb.append("super.writeToParcel(dest, flags);");
         }
         for (PsiField field : fields) {
-            sb.append(getSerializerForType(field).writeValue(field, "dest", "flags"));
+            sb.append(getSerializerForType(field).writeValue(SerializableValue.member(field), "dest", "flags"));
         }
 
         sb.append("}");

@@ -18,7 +18,9 @@ package pl.charmas.parcelablegenerator.typeserializers;
 import com.intellij.psi.PsiType;
 import pl.charmas.parcelablegenerator.typeserializers.serializers.ParcelableObjectSerializer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ChainSerializerFactory implements TypeSerializerFactory {
@@ -27,6 +29,10 @@ public class ChainSerializerFactory implements TypeSerializerFactory {
 
     public ChainSerializerFactory(TypeSerializerFactory... factories) {
         this.factories = Arrays.asList(factories);
+    }
+
+    private ChainSerializerFactory(List<TypeSerializerFactory> factories) {
+        this.factories = Collections.unmodifiableList(factories);
     }
 
     @Override
@@ -38,5 +44,11 @@ public class ChainSerializerFactory implements TypeSerializerFactory {
             }
         }
         return new ParcelableObjectSerializer();
+    }
+
+    public TypeSerializerFactory extend(MapSerializerFactory factoryToAdd) {
+        List<TypeSerializerFactory> factories = new ArrayList<TypeSerializerFactory>(this.factories);
+        factories.add(factoryToAdd);
+        return new ChainSerializerFactory(factories);
     }
 }

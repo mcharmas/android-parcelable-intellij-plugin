@@ -1,6 +1,7 @@
 package pl.charmas.parcelablegenerator.typeserializers;
 
 import com.intellij.psi.PsiType;
+
 import pl.charmas.parcelablegenerator.typeserializers.serializers.BundleSerializer;
 
 /**

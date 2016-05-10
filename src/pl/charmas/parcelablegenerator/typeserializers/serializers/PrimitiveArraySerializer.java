@@ -15,7 +15,7 @@
  */
 package pl.charmas.parcelablegenerator.typeserializers.serializers;
 
-import com.intellij.psi.PsiField;
+import pl.charmas.parcelablegenerator.typeserializers.SerializableValue;
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
 
 public class PrimitiveArraySerializer implements TypeSerializer {
@@ -27,12 +27,12 @@ public class PrimitiveArraySerializer implements TypeSerializer {
     }
 
     @Override
-    public String writeValue(PsiField field, String parcel, String flags) {
-        return parcel + ".write" + type + "Array(this." + field.getName() + ");";
+    public String writeValue(SerializableValue field, String parcel, String flags) {
+        return parcel + ".write" + type + "Array(" + field.getName() + ");";
     }
 
     @Override
-    public String readValue(PsiField field, String parcel) {
-        return "this." + field.getName() + " = " + parcel + ".create" + type + "Array();";
+    public String readValue(SerializableValue field, String parcel) {
+        return field.getName() + " = " + parcel + ".create" + type + "Array();";
     }
 }

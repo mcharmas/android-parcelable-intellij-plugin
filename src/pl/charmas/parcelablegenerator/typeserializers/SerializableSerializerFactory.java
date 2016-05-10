@@ -1,7 +1,9 @@
 package pl.charmas.parcelablegenerator.typeserializers;
 
 import com.intellij.psi.PsiType;
+
 import pl.charmas.parcelablegenerator.typeserializers.serializers.SerializableObjectSerializer;
+import pl.charmas.parcelablegenerator.util.PsiUtils;
 
 /**
  * Modified by Dallas Gutauckis [dallas@gutauckis.com]
@@ -15,14 +17,8 @@ public class SerializableSerializerFactory implements TypeSerializerFactory {
 
     @Override
     public TypeSerializer getSerializer(PsiType psiType) {
-        PsiType[] superTypes = psiType.getSuperTypes();
-
-        for (PsiType superType : superTypes) {
-            String canonicalText = superType.getCanonicalText();
-
-            if ("java.io.Serializable".equals(canonicalText)) {
-                return mSerializer;
-            }
+        if (PsiUtils.isOfType(psiType, "java.io.Serializable")) {
+            return mSerializer;
         }
 
         return null;
