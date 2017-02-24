@@ -16,39 +16,38 @@
 package pl.charmas.parcelablegenerator.typeserializers;
 
 import com.intellij.psi.PsiType;
-import pl.charmas.parcelablegenerator.typeserializers.serializers.ParcelableObjectSerializer;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import pl.charmas.parcelablegenerator.typeserializers.serializers.ParcelableObjectSerializer;
 
 public class ChainSerializerFactory implements TypeSerializerFactory {
 
-    private final List<TypeSerializerFactory> factories;
+  private final List<TypeSerializerFactory> factories;
 
-    public ChainSerializerFactory(TypeSerializerFactory... factories) {
-        this.factories = Arrays.asList(factories);
-    }
+  public ChainSerializerFactory(TypeSerializerFactory... factories) {
+    this.factories = Arrays.asList(factories);
+  }
 
-    private ChainSerializerFactory(List<TypeSerializerFactory> factories) {
-        this.factories = Collections.unmodifiableList(factories);
-    }
+  private ChainSerializerFactory(List<TypeSerializerFactory> factories) {
+    this.factories = Collections.unmodifiableList(factories);
+  }
 
-    @Override
-    public TypeSerializer getSerializer(PsiType psiType) {
-        for (TypeSerializerFactory factory : factories) {
-            TypeSerializer serializer = factory.getSerializer(psiType);
-            if (serializer != null) {
-                return serializer;
-            }
-        }
-        return new ParcelableObjectSerializer();
+  @Override
+  public TypeSerializer getSerializer(PsiType psiType) {
+    for (TypeSerializerFactory factory : factories) {
+      TypeSerializer serializer = factory.getSerializer(psiType);
+      if (serializer != null) {
+        return serializer;
+      }
     }
+    return new ParcelableObjectSerializer();
+  }
 
-    public TypeSerializerFactory extend(MapSerializerFactory factoryToAdd) {
-        List<TypeSerializerFactory> factories = new ArrayList<TypeSerializerFactory>(this.factories);
-        factories.add(factoryToAdd);
-        return new ChainSerializerFactory(factories);
-    }
+  public TypeSerializerFactory extend(MapSerializerFactory factoryToAdd) {
+    List<TypeSerializerFactory> factories = new ArrayList<TypeSerializerFactory>(this.factories);
+    factories.add(factoryToAdd);
+    return new ChainSerializerFactory(factories);
+  }
 }

@@ -16,12 +16,11 @@
 package pl.charmas.parcelablegenerator.typeserializers.serializers;
 
 import com.intellij.psi.PsiType;
+import java.util.List;
 import pl.charmas.parcelablegenerator.typeserializers.SerializableValue;
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializerFactory;
 import pl.charmas.parcelablegenerator.util.PsiUtils;
-
-import java.util.List;
 
 @SuppressWarnings("StringBufferReplaceableByString")
 public class MapSerializer implements TypeSerializer {
@@ -66,8 +65,10 @@ public class MapSerializer implements TypeSerializer {
                 .append(String.format("int %s = %s.readInt();", sizeVariableName, parcel))
                 .append(field.getName()).append(String.format(" = new java.util.HashMap<%s, %s>(%s);", keyType.getCanonicalText(), valueType.getCanonicalText(), sizeVariableName))
                 .append(String.format("for(int i = 0; i < %s; i++) {", sizeVariableName))
-                .append(typeSerializerFactory.getSerializer(keyType).readValue(SerializableValue.variable("key", keyType), parcel))
-                .append(typeSerializerFactory.getSerializer(valueType).readValue(SerializableValue.variable("value", valueType), parcel))
+                .append(typeSerializerFactory.getSerializer(keyType).readValue(
+                    SerializableValue.variable("key", keyType), parcel))
+                .append(typeSerializerFactory.getSerializer(valueType).readValue(
+                    SerializableValue.variable("value", valueType), parcel))
                 .append(field.getName()).append(".put(key, value);")
                 .append("}")
                 .toString();

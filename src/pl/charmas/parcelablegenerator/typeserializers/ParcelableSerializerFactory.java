@@ -1,9 +1,7 @@
 package pl.charmas.parcelablegenerator.typeserializers;
 
 import com.intellij.psi.PsiType;
-
 import java.util.List;
-
 import pl.charmas.parcelablegenerator.typeserializers.serializers.ParcelableArraySerializer;
 import pl.charmas.parcelablegenerator.typeserializers.serializers.ParcelableListSerializer;
 import pl.charmas.parcelablegenerator.typeserializers.serializers.ParcelableObjectSerializer;
