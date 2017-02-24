@@ -1,5 +1,10 @@
 # Change Log
 
+##Version 0.7.1
+
+* Replaced `protected` with `private` access modifier for generated constructors with explicit `Parcel` parameter.
+* Removed lint warning: `Access can be private`.
+
 ##Version 0.7.0
 
 * Added map parcelation
