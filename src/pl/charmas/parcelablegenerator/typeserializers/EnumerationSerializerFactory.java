@@ -2,7 +2,6 @@ package pl.charmas.parcelablegenerator.typeserializers;
 
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
-
 import pl.charmas.parcelablegenerator.typeserializers.serializers.EnumerationSerializer;
 
 /**

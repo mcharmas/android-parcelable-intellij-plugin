@@ -26,16 +26,13 @@ import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.panels.VerticalBox;
-
-import org.jetbrains.annotations.Nullable;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import org.jetbrains.annotations.Nullable;
 
 public class GenerateDialog extends DialogWrapper {
 

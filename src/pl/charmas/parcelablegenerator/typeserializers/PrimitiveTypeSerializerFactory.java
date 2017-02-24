@@ -16,10 +16,8 @@
 package pl.charmas.parcelablegenerator.typeserializers;
 
 import com.intellij.psi.PsiType;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import pl.charmas.parcelablegenerator.typeserializers.serializers.BooleanPrimitiveSerializer;
 import pl.charmas.parcelablegenerator.typeserializers.serializers.CharPrimitiveSerializer;
 import pl.charmas.parcelablegenerator.typeserializers.serializers.NullablePrimitivesSerializer;

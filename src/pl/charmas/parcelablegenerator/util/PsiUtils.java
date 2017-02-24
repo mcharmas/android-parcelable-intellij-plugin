@@ -4,7 +4,6 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassType;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.util.PsiTypesUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 

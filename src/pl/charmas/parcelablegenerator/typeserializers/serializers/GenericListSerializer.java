@@ -17,9 +17,7 @@ package pl.charmas.parcelablegenerator.typeserializers.serializers;
 
 import com.intellij.psi.PsiType;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
-
 import org.jetbrains.annotations.NotNull;
-
 import pl.charmas.parcelablegenerator.typeserializers.SerializableValue;
 import pl.charmas.parcelablegenerator.typeserializers.TypeSerializer;
 
