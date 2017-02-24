@@ -15,13 +15,20 @@
  */
 package pl.charmas.parcelablegenerator;
 
-import com.intellij.psi.*;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiClassType;
+import com.intellij.psi.PsiElementFactory;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiJavaCodeReferenceElement;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiParameter;
+import com.intellij.psi.PsiParameterList;
+import com.intellij.psi.PsiReferenceList;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
+import java.util.List;
 import pl.charmas.parcelablegenerator.typeserializers.*;
 import pl.charmas.parcelablegenerator.util.PsiUtils;
-
-import java.util.List;
-
 
 /**
  * Quite a few changes here by Dallas Gutauckis [dallas@gutauckis.com]
@@ -72,7 +79,7 @@ public class CodeGenerator {
     private String generateConstructor(List<PsiField> fields, PsiClass psiClass) {
         String className = psiClass.getName();
 
-        StringBuilder sb = new StringBuilder("protected ");
+        StringBuilder sb = new StringBuilder("private ");
 
         // Create the Parcelable-required constructor
         sb.append(className).append("(android.os.Parcel in) {");
