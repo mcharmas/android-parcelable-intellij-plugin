@@ -195,7 +195,7 @@ public class CodeGenerator {
      * @param psiClass
      */
     private void removeExistingParcelableImplementation(PsiClass psiClass) {
-        PsiField[] allFields = psiClass.getAllFields();
+        PsiField[] allFields = psiClass.getFields();
 
         // Look for an existing CREATOR and remove it
         for (PsiField field : allFields) {
