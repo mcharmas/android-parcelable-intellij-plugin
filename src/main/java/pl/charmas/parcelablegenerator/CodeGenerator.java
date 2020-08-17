@@ -116,6 +116,20 @@ public class CodeGenerator {
         return sb.toString();
     }
 
+    private String generateReadFromToParcel(List<PsiField> fields) {
+        StringBuilder sb = new StringBuilder("public void readFromParcel(android.os.Parcel source) {");
+        if (hasParcelableSuperclass() && hasSuperMethod("readFromParcel")) {
+            sb.append("super.readFromParcel(source);");
+        }
+        for (PsiField field : fields) {
+            sb.append(getSerializerForType(field).readValue(SerializableValue.member(field), "source"));
+        }
+
+        sb.append("}");
+
+        return sb.toString();
+    }
+
     private boolean hasSuperMethod(String methodName) {
         if (methodName == null) return false;
 
@@ -148,6 +162,8 @@ public class CodeGenerator {
         PsiMethod describeContentsMethod = elementFactory.createMethodFromText(generateDescribeContents(), mClass);
         // Method for writing to the parcel
         PsiMethod writeToParcelMethod = elementFactory.createMethodFromText(generateWriteToParcel(mFields), mClass);
+        // Method for reading from the parcel
+        PsiMethod readFromParcelMethod = elementFactory.createMethodFromText(generateReadFromToParcel(mFields), mClass);
 
         // Default constructor if needed
         String defaultConstructorString = generateDefaultConstructor(mClass);
@@ -167,6 +183,7 @@ public class CodeGenerator {
         // Shorten all class references
         styleManager.shortenClassReferences(mClass.addBefore(describeContentsMethod, mClass.getLastChild()));
         styleManager.shortenClassReferences(mClass.addBefore(writeToParcelMethod, mClass.getLastChild()));
+        styleManager.shortenClassReferences(mClass.addBefore(readFromParcelMethod, mClass.getLastChild()));
 
         // Only adds if available
         if (defaultConstructor != null) {

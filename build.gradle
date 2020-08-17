@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.intellij' version '0.4.21'
+}
+
+group 'pl.charmas'
+version '0.7.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+// See https://github.com/JetBrains/gradle-intellij-plugin/
+intellij {
+    version '2019.3'
+    type 'IC'
+    plugins 'android'
+}
+patchPluginXml {
+    changeNotes """
+      Added support for generating readFromParcel"""
+}
+
+runIde {
+    // Absolute path to installed target Android Studio to use as IDE Development Instance
+    ideDirectory 'D:\\android-studio'
+}

@@ -15,7 +15,7 @@
 ** limitations under the License.
 */
 -->
-<idea-plugin version="8">
+<idea-plugin>
     <id>pl.charmas.parcelablegenerator</id>
     <name>Android Parcelable code generator</name>
     <version>0.7.0</version>
@@ -55,7 +55,10 @@
         </action>
     </actions>
 
+    <depends>com.intellij.modules.androidstudio</depends>
+
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
     </extensions>
+
 </idea-plugin>
