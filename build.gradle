@@ -1,7 +1,11 @@
 plugins {
-    id 'java'
     id 'org.jetbrains.intellij' version '0.4.21'
 }
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+apply plugin: 'java'
 
 group 'pl.charmas'
 version '0.7.1'
@@ -16,9 +20,10 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version '2019.3'
-    type 'IC'
-    plugins 'android'
+    plugins 'java'
+    updateSinceUntilBuild false
+    sameSinceUntilBuild true
+    intellij.localPath = project.hasProperty("StudioRunPath") ? StudioRunPath : StudioCompilePath
 }
 patchPluginXml {
     changeNotes """
@@ -27,5 +32,16 @@ patchPluginXml {
 
 runIde {
     // Absolute path to installed target Android Studio to use as IDE Development Instance
-    ideDirectory 'D:\\android-studio'
+    ideDirectory "$StudioCompilePath"
 }
+
+task(verifySetup) {
+    doLast {
+        def ideaJar = "$StudioCompilePath/lib/idea.jar"
+        if (!file(ideaJar).exists()) {
+            throw new GradleException("$ideaJar not found, set StudioCompilePath in gradle.properties")
+        }
+    }
+}
+
+compileJava.dependsOn verifySetup

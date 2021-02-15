@@ -42,6 +42,15 @@ Just press **ALT + Insert** (or your equivalent keybinding for code generation) 
 
  * [Michał Charmas](https://github.com/mcharmas/)
  * [Dallas Gutauckis](http://github.com/dallasgutauckis)
+ * [Karsten Ohme](http://github.com/koh-osug)
+
+## Development
+
+Copy the file `gradle.properties.set-me-up` to `gradle.properties` 
+and set the path to your Android Studio installation.
+
+__NOTE:__ Ubuntu users using snap must pay attention that a mounted snap is not writeable. For the 
+compilation use a writeable copy of Android studio.
 
 ## License
 

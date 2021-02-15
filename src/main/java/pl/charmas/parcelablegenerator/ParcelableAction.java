@@ -44,12 +44,9 @@ public class ParcelableAction extends AnAction {
     }
 
     private void generateParcelable(final PsiClass psiClass, final List<PsiField> fields) {
-        new WriteCommandAction.Simple(psiClass.getProject(), psiClass.getContainingFile()) {
-            @Override
-            protected void run() throws Throwable {
-                new CodeGenerator(psiClass, fields).generate();
-            }
-        }.execute();
+        WriteCommandAction.writeCommandAction(psiClass.getProject(), psiClass.getContainingFile()).run(
+                () -> new CodeGenerator(psiClass, fields).generate()
+        );
     }
 
 
