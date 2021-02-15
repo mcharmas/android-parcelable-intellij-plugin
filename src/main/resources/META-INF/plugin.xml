@@ -15,10 +15,10 @@
 ** limitations under the License.
 */
 -->
-<idea-plugin version="8">
+<idea-plugin>
     <id>pl.charmas.parcelablegenerator</id>
-    <name>Android Parcelable code generator</name>
-    <version>0.7.0</version>
+    <name>Android Parcelable Code Generator</name>
+    <version>0.7.1</version>
     <vendor email="michal@charmas.pl" url="http://blog.charmas.pl">Michal Charmas</vendor>
 
     <description><![CDATA[
@@ -29,9 +29,8 @@
             ]]>
     </change-notes>
 
-    <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
-    <idea-version since-build="123.72"/>
-
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="193"/>
     <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
          on how to target different products -->
     <!-- uncomment to enable plugin in all products
@@ -55,7 +54,11 @@
         </action>
     </actions>
 
+    <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.android</depends>
+
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
     </extensions>
+
 </idea-plugin>
